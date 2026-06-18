@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { Bell, ClipboardList, UserPlus, Users } from 'lucide-react'
+import { Header } from '../components/Header'
 import './DefaultLayout.css'
 
 const navigationItems = [
@@ -61,7 +62,10 @@ export function DefaultLayout() {
       </aside>
 
       <main className="default-layout__content">
-        <Outlet />
+        <Header />
+        <section className="default-layout__page">
+          <Outlet />
+        </section>
       </main>
     </div>
   )

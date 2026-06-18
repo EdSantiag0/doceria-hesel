@@ -96,11 +96,20 @@
 }
 
 .default-layout__content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
   min-width: 0;
   flex: 1;
   padding: 32px;
   text-align: left;
   box-sizing: border-box;
+}
+
+.default-layout__page {
+  display: flex;
+  min-height: 0;
+  flex: 1;
 }
 
 @media (max-width: 760px) {
