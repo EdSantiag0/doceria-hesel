@@ -1,0 +1,37 @@
+.client-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid #e7ddd5;
+  border-radius: 8px;
+  background: #fffaf6;
+  padding: 16px;
+}
+
+.client-card h3 {
+  margin: 0 0 4px;
+  color: #2a211d;
+  font-size: 17px;
+}
+
+.client-card p {
+  margin: 0;
+  color: #77675f;
+  font-size: 14px;
+}
+
+.client-card__phone {
+  color: #8d493a;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .client-card {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

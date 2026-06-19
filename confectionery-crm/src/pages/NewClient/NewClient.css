@@ -1,0 +1,50 @@
+.new-client-page {
+  width: min(720px, 100%);
+}
+
+.new-client-page__heading {
+  margin-bottom: 24px;
+}
+
+.new-client-page__heading h2 {
+  margin: 0 0 6px;
+  color: #2a211d;
+  font-size: 24px;
+}
+
+.new-client-page__heading p {
+  margin: 0;
+  color: #77675f;
+}
+
+.new-client-form {
+  display: grid;
+  gap: 18px;
+  border: 1px solid #e7ddd5;
+  border-radius: 8px;
+  background: #fffaf6;
+  padding: 24px;
+}
+
+.new-client-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 4px;
+}
+
+.new-client-form__actions button {
+  min-height: 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #8d493a;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  padding: 0 18px;
+  transition: background-color 160ms ease;
+}
+
+.new-client-form__actions button:hover {
+  background: #7b3f32;
+}
