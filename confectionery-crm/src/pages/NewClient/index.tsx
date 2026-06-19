@@ -1,74 +1,61 @@
 // Pagina para cadastrar novos clientes.
-import { useState } from 'react'
-import type { FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { FormInput } from '../../components/FormInput'
-import { createClient } from '../../services/clientStorage'
+import { useState } from "react";
+import type { FormEvent } from "react";
+import { z } from "zod";
+import { FormInput } from "../../components/FormInput";
+import { createClient } from "../../services/clientStorage";
 
-interface ClientFormData {
-  name: string
-  address: string
-  phone: string
-}
+const clientSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(2, "Informe o nome do cliente.")
+    .max(100, "O nome deve ter no maximo 100 caracteres."),
+  address: z
+    .string()
+    .trim()
+    .min(5, "Informe o endereco do cliente.")
+    .max(200, "O endereco deve ter no maximo 200 caracteres."),
+  phone: z
+    .string()
+    .trim()
+    .min(10, "Informe um telefone valido.")
+    .max(15, "O telefone deve ter no maximo 15 caracteres."),
+});
+
+type ClientFormData = z.infer<typeof clientSchema>;
+type ClientFormErrors = Partial<Record<keyof ClientFormData, string>>;
 
 const initialFormData: ClientFormData = {
-  name: '',
-  address: '',
-  phone: '',
-}
+  name: "",
+  address: "",
+  phone: "",
+};
 
 export function NewClient() {
-  const navigate = useNavigate()
-  const [formData, setFormData] = useState(initialFormData)
-  const [errors, setErrors] = useState<Partial<ClientFormData>>({})
-
-  function updateField(field: keyof ClientFormData, value: string) {
-    setFormData((currentFormData) => ({
-      ...currentFormData,
-      [field]: value,
-    }))
-
-    setErrors((currentErrors) => ({
-      ...currentErrors,
-      [field]: undefined,
-    }))
-  }
-
-  function validateForm() {
-    const nextErrors: Partial<ClientFormData> = {}
-
-    if (!formData.name.trim()) {
-      nextErrors.name = 'Informe o nome do cliente.'
-    }
-
-    if (!formData.address.trim()) {
-      nextErrors.address = 'Informe o endereço do cliente.'
-    }
-
-    if (!formData.phone.trim()) {
-      nextErrors.phone = 'Informe o telefone do cliente.'
-    }
-
-    setErrors(nextErrors)
-
-    return Object.keys(nextErrors).length === 0
-  }
+  const [formData, setFormData] = useState(initialFormData);
+  const [errors, setErrors] = useState<ClientFormErrors>({});
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+    event.preventDefault();
 
-    if (!validateForm()) {
-      return
+    const result = clientSchema.safeParse(formData);
+
+    if (!result.success) {
+      const fieldErrors = result.error.flatten().fieldErrors;
+
+      setErrors({
+        name: fieldErrors.name?.[0],
+        address: fieldErrors.address?.[0],
+        phone: fieldErrors.phone?.[0],
+      });
+
+      return;
     }
 
-    createClient({
-      name: formData.name.trim(),
-      address: formData.address.trim(),
-      phone: formData.phone.trim(),
-    })
-
-    setFormData(initialFormData)
-    navigate('/clientes')
+    createClient(result.data);
+    setFormData(initialFormData);
+    setErrors({});
   }
 
   return (
@@ -90,16 +77,26 @@ export function NewClient() {
           placeholder="Nome do cliente"
           value={formData.name}
           error={errors.name}
-          onChange={(event) => updateField('name', event.target.value)}
+          onChange={(event) =>
+            setFormData((currentFormData) => ({
+              ...currentFormData,
+              name: event.target.value,
+            }))
+          }
         />
 
         <FormInput
-          label="Endereço"
+          label="Endereco"
           name="address"
-          placeholder="Rua, número e bairro"
+          placeholder="Rua, numero e bairro"
           value={formData.address}
           error={errors.address}
-          onChange={(event) => updateField('address', event.target.value)}
+          onChange={(event) =>
+            setFormData((currentFormData) => ({
+              ...currentFormData,
+              address: event.target.value,
+            }))
+          }
         />
 
         <FormInput
@@ -108,7 +105,12 @@ export function NewClient() {
           placeholder="(00) 00000-0000"
           value={formData.phone}
           error={errors.phone}
-          onChange={(event) => updateField('phone', event.target.value)}
+          onChange={(event) =>
+            setFormData((currentFormData) => ({
+              ...currentFormData,
+              phone: event.target.value,
+            }))
+          }
         />
 
         <div className="mt-1 flex justify-end">
@@ -121,5 +123,5 @@ export function NewClient() {
         </div>
       </form>
     </div>
-  )
+  );
 }
