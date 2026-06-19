@@ -1,9 +1,9 @@
+// Pagina para cadastrar novos clientes.
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FormInput } from '../../components/FormInput'
 import { createClient } from '../../services/clientStorage'
-import './NewClient.css'
 
 interface ClientFormData {
   name: string
@@ -72,13 +72,18 @@ export function NewClient() {
   }
 
   return (
-    <div className="new-client-page">
-      <div className="new-client-page__heading">
-        <h2>Novo Cliente</h2>
-        <p>Cadastre os dados principais para vincular pedidos depois.</p>
+    <div className="w-full max-w-[720px]">
+      <div className="mb-6">
+        <h2 className="mb-1.5 mt-0 text-2xl text-[#2a211d]">Novo Cliente</h2>
+        <p className="m-0 text-[#77675f]">
+          Cadastre os dados principais para vincular pedidos depois.
+        </p>
       </div>
 
-      <form className="new-client-form" onSubmit={handleSubmit}>
+      <form
+        className="grid gap-[18px] rounded-lg border border-[#e7ddd5] bg-[#fffaf6] p-6"
+        onSubmit={handleSubmit}
+      >
         <FormInput
           label="Nome"
           name="name"
@@ -106,8 +111,13 @@ export function NewClient() {
           onChange={(event) => updateField('phone', event.target.value)}
         />
 
-        <div className="new-client-form__actions">
-          <button type="submit">Cadastrar Cliente</button>
+        <div className="mt-1 flex justify-end">
+          <button
+            type="submit"
+            className="min-h-11 cursor-pointer rounded-lg border-0 bg-[#8d493a] px-[18px] font-bold text-white transition-colors duration-150 hover:bg-[#7b3f32]"
+          >
+            Cadastrar Cliente
+          </button>
         </div>
       </form>
     </div>
