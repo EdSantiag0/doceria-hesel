@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { z } from "zod";
 import { FormInput } from "../../components/FormInput";
 import { createClient } from "../../services/clientStorage";
+import { toast } from "react-toastify";
 
 const clientSchema = z.object({
   name: z
@@ -20,7 +21,11 @@ const clientSchema = z.object({
     .string()
     .trim()
     .min(10, "Informe um telefone valido.")
-    .max(15, "O telefone deve ter no maximo 15 caracteres."),
+    .max(15, "O telefone deve ter no maximo 15 caracteres.")
+    .regex(
+      /^\(?\d{2}\)?[\s-]?[\s9]?\d{4}-?\d{4}$/,
+      "Informe um telefone valido.",
+    ),
 });
 
 type ClientFormData = z.infer<typeof clientSchema>;
@@ -54,6 +59,7 @@ export function NewClient() {
     }
 
     createClient(result.data);
+    toast.success(`Cliente ${result.data.name} cadastrado com sucesso!`);
     setFormData(initialFormData);
     setErrors({});
   }
