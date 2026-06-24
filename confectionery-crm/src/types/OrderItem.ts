@@ -1,9 +1,11 @@
 export interface OrderItem {
-  id: string
-  orderId: string
-  quantity: number
-  product: string
-  unitValue: number
+  id: string;
+  quantity: number;
+  product: string;
+  unitValue: number;
+  total: number;
 }
 
-export type CreateOrderItemInput = Omit<OrderItem, 'id' | 'orderId'>
+export type CreateOrderItemInput = Omit<OrderItem, "id" | "total"> & {
+  orderId: string;
+};
