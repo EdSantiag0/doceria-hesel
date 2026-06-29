@@ -15,11 +15,24 @@ const orderSchema = z.object({
   unitValue: z
     .number()
     .min(0, { message: "O valor unitário deve ser maior ou igual a zero." }),
-  orderDate: z.string().date({ message: "Data do pedido inválida." }),
   paymentMethod: z.string().max(100, {
     message: "O método de pagamento deve ter no máximo 100 caracteres.",
   }),
   total: z
+    .number()
+    .min(0, { message: "O total do pedido deve ser maior ou igual a zero." }),
+  reminderDate: z.string().optional(),
+  reminder: z
+    .object({
+      reminderDate: z.string().date({
+        message: "Data do lembrete inválida.",
+      }),
+      description: z.string().max(255, {
+        message: "A descrição deve ter no máximo 255 caracteres.",
+      }),
+    })
+    .optional(),
+  orderTotal: z
     .number()
     .min(0, { message: "O total do pedido deve ser maior ou igual a zero." }),
 });
@@ -31,9 +44,11 @@ const initialFormData: OrderFormData = {
   quantity: 0,
   product: "",
   unitValue: 0,
-  orderDate: "",
-  paymentMethod: "",
   total: 0,
+  reminderDate: "",
+  reminder: undefined,
+  paymentMethod: "",
+  orderTotal: 0,
 };
 
 export function NewOrder() {
@@ -51,9 +66,11 @@ export function NewOrder() {
         quantity: fieldErrors.quantity?.[0],
         product: fieldErrors.product?.[0],
         unitValue: fieldErrors.unitValue?.[0],
-        orderDate: fieldErrors.orderDate?.[0],
-        paymentMethod: fieldErrors.paymentMethod?.[0],
         total: fieldErrors.total?.[0],
+        reminderDate: fieldErrors.reminderDate?.[0],
+        paymentMethod: fieldErrors.paymentMethod?.[0],
+        reminder: fieldErrors.reminder?.[0],
+        orderTotal: fieldErrors.orderTotal?.[0],
       });
 
       return;
@@ -109,37 +126,56 @@ export function NewOrder() {
           error={errors.unitValue}
         />
 
-        <FormInput
-          label="Data do Pedido" //DATA DO PEDIDO
-          name="orderDate"
-          type="date"
-          value={formData.orderDate}
-          onChange={(e) =>
-            setFormData({ ...formData, orderDate: e.target.value })
-          }
-          error={errors.orderDate}
-        />
+        <div className="rounded-lg border bg-stone-100 p-3">
+          <span>Total</span>
+
+          <strong>R$ 0,00</strong>
+        </div>
+
+        <div className="mt-1 flex justify-end">
+          <button
+            type="button"
+            className="min-h-11 cursor-pointer rounded-lg border-0 bg-[#8d493a] px-[18px] font-bold text-white transition-colors duration-150 hover:bg-[#7b3f32]"
+          >
+            Adicionar Item
+          </button>
+        </div>
 
         <FormInput
-          label="Método de Pagamento" //MÉTODO DE PAGAMENTO
-          name="paymentMethod"
+          label="Data do Lembrete" //DATA DO LEMBRETE
+          name="reminderDate"
+          type="date"
+          value={formData.reminderDate}
+          onChange={(e) =>
+            setFormData({ ...formData, reminderDate: e.target.value })
+          }
+          error={errors.reminderDate}
+        />
+
+        <FormInput label="Lembrete" />
+
+        <select
+          name="paymentMethod" // MÉTODO DE PAGAMENTO
+          id="paymentMethod"
           value={formData.paymentMethod}
           onChange={(e) =>
             setFormData({ ...formData, paymentMethod: e.target.value })
           }
-          error={errors.paymentMethod}
-        />
+        >
+          <option value="">Selecione o método de pagamento</option>
+          <option value="cash">Dinheiro</option>
+          <option value="debit_card">Cartão Débito</option>
+          <option value="credit_card">Cartão de Crédito</option>
+          <option value="bank_transfer">Transferência Bancária</option>
+          <option value="pix">Pix</option>
+          <option value="other">Outro</option>
+        </select>
 
-        <FormInput
-          label="Total" //TOTAL
-          name="total"
-          type="number"
-          value={formData.total}
-          onChange={(e) =>
-            setFormData({ ...formData, total: Number(e.target.value) })
-          }
-          error={errors.total}
-        />
+        <div className="rounded-lg border bg-stone-100 p-3">
+          <span>Total do Pedido</span>
+
+          <strong>R$ 0,00</strong>
+        </div>
 
         <div className="mt-1 flex justify-end">
           <button
