@@ -2,8 +2,9 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { z } from "zod";
-import { toast } from "react-toastify";
 import { FormInput } from "../../components/FormInput";
+import { createOrder } from "../../services/orderStorage";
+import { toast } from "react-toastify";
 
 const orderSchema = z.object({
   quantity: z
@@ -76,7 +77,7 @@ export function NewOrder() {
       return;
     }
 
-    // createOrder(result.data); // Crie um arquivo em services/orderStorage.ts para implementar essa função.
+    // createOrder(result.data);
 
     toast.success("Pedido cadastrado com sucesso!");
     setFormData(initialFormData);

@@ -20,3 +20,5 @@ export interface Order {
   createdAt: string;
   updatedAt?: string;
 }
+
+export type CreateOrderInput = Omit<Order, "id" | "createdAt" | "updatedAt">;
