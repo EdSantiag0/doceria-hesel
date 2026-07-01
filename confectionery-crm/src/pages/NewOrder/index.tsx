@@ -85,13 +85,15 @@ export function NewOrder() {
 
   return (
     <div className="w-full max-w-[720px]">
-      <h2 className="mb-1.5 mt-0 text-2xl text-[#2a211d]">Novo Pedido</h2>
-      <p className="m-0 text-[#77675f]">
+      <h2 className="mb-1.5 mt-0 text-2xl text-brand-900 font-bold">
+        Novo Pedido
+      </h2>
+      <p className="m-0 text-text-muted">
         O formulário de pedido com produtos, pagamento e total ficará aqui.
       </p>
 
       <form
-        className="grid gap-[18px] rounded-lg border border-[#e7ddd5] bg-[#fffaf6] p-6"
+        className="grid gap-[18px] rounded-lg border border-[--color-brand-border] bg-[--color-brand-50] p-6"
         onSubmit={handleSubmit}
       >
         <FormInput
@@ -135,7 +137,9 @@ export function NewOrder() {
         <div className="mt-1 flex justify-end">
           <button
             type="button"
-            className="min-h-11 cursor-pointer rounded-lg border-0 bg-[#8d493a] px-[18px] font-bold text-white transition-colors duration-150 hover:bg-[#7b3f32]"
+            className="flex items-center justify-center min-h-12 px-6 rounded-lg 
+             bg-brand-500 text-white font-semibold shadow-sm 
+             transition-all hover:bg-brand-500/90 active:scale-[0.98]"
           >
             Adicionar Item
           </button>
@@ -180,7 +184,9 @@ export function NewOrder() {
         <div className="mt-1 flex justify-end">
           <button
             type="submit"
-            className="min-h-11 cursor-pointer rounded-lg border-0 bg-[#8d493a] px-[18px] font-bold text-white transition-colors duration-150 hover:bg-[#7b3f32]"
+            className="flex items-center justify-center min-h-12 px-6 rounded-lg 
+             bg-brand-500 text-white font-semibold shadow-sm 
+             transition-all hover:bg-brand-500/90 active:scale-[0.98]"
           >
             Cadastrar Pedido
           </button>

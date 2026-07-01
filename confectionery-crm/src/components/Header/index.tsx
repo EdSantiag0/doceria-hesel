@@ -3,10 +3,10 @@ export function Header() {
   return (
     <header className="flex flex-col items-start justify-between gap-5 border-b border-[#e7ddd5] pb-6 md:flex-row md:items-center">
       <div>
-        <p className="mb-1 mt-0 text-[13px] font-bold uppercase text-[#8d493a]">
+        <p className="mb-1 mt-0 text-[13px] font-bold uppercase text-[--color-brand-500]">
           Sistema de registros
         </p>
-        <h1 className="m-0 text-[28px] leading-tight text-[#2a211d]">
+        <h1 className="m-0 text-[28px] leading-tight text-[--color-brand-900]">
           Doceria Hesel
         </h1>
       </div>
@@ -16,5 +16,5 @@ export function Header() {
         <span>Em desenvolvimento</span>
       </div>
     </header>
-  )
+  );
 }
