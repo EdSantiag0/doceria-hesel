@@ -12,7 +12,6 @@ export type PaymentMethod =
 export interface Order {
   id: string;
   clientId: string;
-  orderDate: string;
   paymentMethod: PaymentMethod;
   items: OrderItem[];
   reminder?: Reminder;
