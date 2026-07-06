@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { FormInput } from "../../components/FormInput";
 import { useState } from "react";
+import { getClients } from "../../services/clientStorage";
 
 const orderSchema = z.object({
   clientId: z.string().min(1, "Selecione um cliente."),
@@ -58,11 +59,12 @@ const initialFormData = {
 export function NewOrder() {
   const [formData, setFormData] = useState(initialFormData);
   const result = orderSchema.safeParse(formData);
+  const clients = getClients();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = orderSchema.safeParse(initialFormData);
+    const result = orderSchema.safeParse(formData);
 
     if (!result.success) {
       const fildsErrors = result.error.flatten().fieldErrors;
@@ -70,13 +72,39 @@ export function NewOrder() {
       return;
     }
   }
+
   return (
     <form onSubmit={handleSubmit}>
       <div>
         <fieldset>
           <legend>Cliente</legend>
+
+          <label htmlFor="clientId"></label>
+
+          <select
+            id="clientId"
+            name="clientId"
+            value={formData.clientId}
+            onChange={(e) =>
+              setFormData({ ...formData, clientId: e.target.value })
+            }
+          >
+            <option value="">Selecione um cliente</option>
+            {clients
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((client) => (
+                <option key={client.id} value={client.id}>
+                  {client.name}
+                </option>
+              ))}
+          </select>
+          {clients.length === 0 && (
+            <small>
+              Nenhum cliente cadastrado. Cadastre um cliente antes de criar um
+              pedido.
+            </small>
+          )}
         </fieldset>
-        <select name="clientId" id="clientId"></select>
       </div>
       --------------------------------------------------------------
       <div>
