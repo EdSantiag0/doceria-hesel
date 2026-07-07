@@ -6,6 +6,4 @@ export interface OrderItem {
   total: number;
 }
 
-export type CreateOrderItemInput = Omit<OrderItem, "id" | "total"> & {
-  orderId: string;
-};
+export type CreateOrderItemInput = Omit<OrderItem, "id" | "total">;

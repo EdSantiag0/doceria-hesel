@@ -2,17 +2,33 @@ import { z } from "zod";
 import { FormInput } from "../../components/FormInput";
 import { useState } from "react";
 import { getClients } from "../../services/clientStorage";
+import type { CreateOrderItemInput } from "../../types/OrderItem";
+import type { CreateOrderInput } from "../../types/Order";
 
 const orderSchema = z.object({
   clientId: z.string().min(1, "Selecione um cliente."),
 
-  quantity: z.number().min(1, "Informe a quantidade."),
+  items: z
+    .array(
+      z.object({
+        id: z.string(),
 
-  product: z.string().trim().min(1, "Informe o produto.").max(255),
+        quantity: z.number().min(1, "A quantidade deve ser maior que zero."),
 
-  unitValue: z.number().min(0.01, "Informe um valor válido."),
+        product: z
+          .string()
+          .trim()
+          .min(1, "Informe o produto.")
+          .max(255, "Máximo de 255 caracteres."),
 
-  total: z.number(),
+        unitValue: z
+          .number()
+          .min(0.01, "O valor unitário deve ser maior que zero."),
+
+        total: z.number(),
+      }),
+    )
+    .min(1, "Adicione pelo menos um item ao pedido."),
 
   paymentMethod: z.enum([
     "cash",
@@ -35,36 +51,39 @@ const orderSchema = z.object({
   orderTotal: z.number(),
 });
 
-const initialFormData = {
+const initialFormData: CreateOrderInput = {
   clientId: "",
 
-  quantity: 1,
+  items: [],
 
-  product: "",
+  paymentMethod: "cash",
 
-  unitValue: 0,
-
-  total: 0,
-
-  paymentMethod: "cash" as const,
-
-  reminder: {
-    date: "",
-    description: "",
-  },
+  reminder: undefined,
 
   orderTotal: 0,
 };
 
 export function NewOrder() {
   const [formData, setFormData] = useState(initialFormData);
-  const result = orderSchema.safeParse(formData);
   const clients = getClients();
+
+  const [currentItem, setCurrentItem] = useState<CreateOrderItemInput>({
+    quantity: 1,
+    product: "",
+    unitValue: 0,
+  });
+
+  const calculateOrderTotal = () => {
+    return formData.items.reduce((acc, item) => acc + item.total, 0);
+  };
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const result = orderSchema.safeParse(formData);
+    const total = calculateOrderTotal();
+    const finalData = { ...formData, orderTotal: total };
+
+    const result = orderSchema.safeParse(finalData);
 
     if (!result.success) {
       const fildsErrors = result.error.flatten().fieldErrors;
@@ -115,32 +134,114 @@ export function NewOrder() {
           name="quantity"
           label="Quantidade"
           type="number"
+          value={currentItem.quantity}
+          onChange={(e) =>
+            setCurrentItem({
+              ...currentItem,
+              quantity: Number(e.target.value),
+            })
+          }
           placeholder="Informe a quantidade"
         />
         <FormInput
           name="product"
           label="Produto"
           type="text"
+          value={currentItem.product}
+          onChange={(e) =>
+            setCurrentItem({
+              ...currentItem,
+              product: e.target.value,
+            })
+          }
           placeholder="Informe o produto"
         />
         <FormInput
           name="unitValue"
           label="Valor Unitário"
           type="number"
+          value={currentItem.unitValue}
+          onChange={(e) =>
+            setCurrentItem({
+              ...currentItem,
+              unitValue: Number(e.target.value),
+            })
+          }
           placeholder="Informe o valor unitário"
           step="0.01"
         />
+        <button
+          type="button"
+          onClick={() => {
+            setFormData({
+              ...formData,
+              items: [
+                ...formData.items,
+                {
+                  id: crypto.randomUUID(),
+                  ...currentItem,
+                  total: currentItem.quantity * currentItem.unitValue,
+                },
+              ],
+            });
+            setCurrentItem({
+              quantity: 1,
+              product: "",
+              unitValue: 0,
+            });
+          }}
+        >
+          Adicionar Item
+        </button>
       </div>
+      --------------------------------------------------------------
+      <fieldset>
+        <legend>Itens do Pedido</legend>
+
+        {formData.items.length === 0 && (
+          <small>Nenhum item adicionado ao pedido.</small>
+        )}
+        <ul>
+          {formData.items.map((item) => (
+            <li key={item.id}>
+              {item.quantity} {item.product} ={" "}
+              <strong>R$ {item.total.toFixed(2)}</strong>
+            </li>
+          ))}
+        </ul>
+      </fieldset>
       --------------------------------------------------------------
       <div>
         <fieldset>
           <legend>Pagamento</legend>
-          <label htmlFor="paymentMethod">Forma de Pagamento</label>
+          <select
+            id="paymentMethod"
+            value={formData.paymentMethod}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                paymentMethod: e.target
+                  .value as CreateOrderInput["paymentMethod"],
+              })
+            }
+          >
+            <option value="cash">Dinheiro</option>
+            <option value="credit_card">Cartão de Crédito</option>
+            <option value="debit_card">Cartão de Débito</option>
+            <option value="pix">PIX</option>
+            <option value="bank_transfer">Transferência Bancária</option>
+            <option value="other">Outro</option>
+          </select>
         </fieldset>
       </div>
       <div>
-        <span>Total do Pedido</span>
-        <strong>R$ 0,00</strong>
+        <span>Total do Pedido: </span>
+        <strong>
+          {new Intl.NumberFormat("pt-BR", {
+            style: "currency",
+            currency: "BRL",
+          }).format(calculateOrderTotal())}
+        </strong>
       </div>
       --------------------------------------------------------------
       <div>
