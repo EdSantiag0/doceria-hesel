@@ -41,7 +41,7 @@ const orderSchema = z.object({
 
   reminder: z
     .object({
-      date: z.string().date({
+      reminderDate: z.string().date({
         message: "Informe uma data válida.",
       }),
       description: z.string().trim().max(255, "Máximo de 255 caracteres."),
@@ -58,7 +58,10 @@ const initialFormData: CreateOrderInput = {
 
   paymentMethod: "cash",
 
-  reminder: undefined,
+  reminder: {
+    reminderDate: "",
+    description: "",
+  },
 
   orderTotal: 0,
 };
@@ -249,15 +252,35 @@ export function NewOrder() {
           <legend>Lembrete</legend>
         </fieldset>
         <FormInput
-          name="reminder.date"
+          name="reminder.reminderDate"
           label="Data"
           type="date"
+          value={formData.reminder?.reminderDate ?? ""}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              reminder: {
+                reminderDate: e.target.value,
+                description: formData.reminder?.description ?? "",
+              },
+            })
+          }
           placeholder="Informe a data do lembrete"
         />
         <FormInput
           name="reminder.description"
           label="Descrição"
           type="text"
+          value={formData.reminder?.description ?? ""}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              reminder: {
+                reminderDate: formData.reminder?.reminderDate ?? "",
+                description: e.target.value,
+              },
+            })
+          }
           placeholder="Informe a descrição do lembrete"
         />
       </div>

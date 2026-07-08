@@ -1,5 +1,5 @@
 import type { OrderItem } from "./OrderItem";
-import type { Reminder } from "./Reminder";
+import type { CreateReminderInput } from "./Reminder";
 
 export type PaymentMethod =
   | "cash"
@@ -14,7 +14,7 @@ export interface Order {
   clientId: string;
   paymentMethod: PaymentMethod;
   items: OrderItem[];
-  reminder?: Reminder;
+  reminder?: CreateReminderInput;
   orderTotal: number; // calculado automaticamente
   createdAt: string;
   updatedAt?: string;
