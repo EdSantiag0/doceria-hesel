@@ -7,26 +7,25 @@ import type { CreateOrderInput } from "../../types/Order";
 import { createOrder } from "../../services/orderStorage";
 import { toast } from "react-toastify";
 
+const orderItemSchema = z.object({
+  quantity: z.number().min(1, "A quantidade deve ser maior que zero."),
+
+  product: z
+    .string()
+    .trim()
+    .min(1, "Informe o produto.")
+    .max(255, "Máximo de 255 caracteres."),
+
+  unitValue: z.number().min(0.01, "O valor unitário deve ser maior que zero."),
+});
+
 const orderSchema = z.object({
   clientId: z.string().min(1, "Selecione um cliente."),
 
   items: z
     .array(
-      z.object({
+      orderItemSchema.extend({
         id: z.string(),
-
-        quantity: z.number().min(1, "A quantidade deve ser maior que zero."),
-
-        product: z
-          .string()
-          .trim()
-          .min(1, "Informe o produto.")
-          .max(255, "Máximo de 255 caracteres."),
-
-        unitValue: z
-          .number()
-          .min(0.01, "O valor unitário deve ser maior que zero."),
-
         total: z.number(),
       }),
     )
@@ -53,6 +52,15 @@ const orderSchema = z.object({
   orderTotal: z.number(),
 });
 
+type OrderFormData = z.infer<typeof orderSchema>;
+type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
+
+type ItemsError = {
+  quantity?: string;
+  product?: string;
+  unitValue?: string;
+};
+
 const initialFormData: CreateOrderInput = {
   clientId: "",
 
@@ -70,6 +78,8 @@ const initialFormData: CreateOrderInput = {
 
 export function NewOrder() {
   const [formData, setFormData] = useState(initialFormData);
+  const [formErrors, setErrors] = useState<OrderFormErrors>({});
+  const [itemsErrors, setItemsErrors] = useState<ItemsError>({});
   const clients = getClients();
 
   const [currentItem, setCurrentItem] = useState<CreateOrderItemInput>({
@@ -94,10 +104,20 @@ export function NewOrder() {
     if (!result.success) {
       const fildsErrors = result.error.flatten().fieldErrors;
 
+      setErrors({
+        clientId: fildsErrors.clientId?.[0],
+        items: fildsErrors.items?.[0],
+        paymentMethod: fildsErrors.paymentMethod?.[0],
+        reminder: fildsErrors.reminder?.[0],
+        orderTotal: fildsErrors.orderTotal?.[0],
+      });
+
       return;
     }
 
     createOrder(finalData);
+
+    setErrors({});
 
     toast.success("Pedido cadastrado com sucesso!");
 
@@ -135,6 +155,9 @@ export function NewOrder() {
                 </option>
               ))}
           </select>
+          {formErrors.clientId && (
+            <small className="text-red-600">{formErrors.clientId}</small>
+          )}
           {clients.length === 0 && (
             <small>
               Nenhum cliente cadastrado. Cadastre um cliente antes de criar um
@@ -153,6 +176,7 @@ export function NewOrder() {
           label="Quantidade"
           type="number"
           value={currentItem.quantity}
+          error={itemsErrors.quantity}
           onChange={(e) =>
             setCurrentItem({
               ...currentItem,
@@ -166,6 +190,7 @@ export function NewOrder() {
           label="Produto"
           type="text"
           value={currentItem.product}
+          error={itemsErrors.product}
           onChange={(e) =>
             setCurrentItem({
               ...currentItem,
@@ -179,6 +204,7 @@ export function NewOrder() {
           label="Valor Unitário"
           type="number"
           value={currentItem.unitValue}
+          error={itemsErrors.unitValue}
           onChange={(e) =>
             setCurrentItem({
               ...currentItem,
@@ -191,6 +217,22 @@ export function NewOrder() {
         <button
           type="button"
           onClick={() => {
+            const result = orderItemSchema.safeParse(currentItem);
+
+            if (!result.success) {
+              const fildsErrors = result.error.flatten().fieldErrors;
+
+              setItemsErrors({
+                quantity: fildsErrors.quantity?.[0],
+                product: fildsErrors.product?.[0],
+                unitValue: fildsErrors.unitValue?.[0],
+              });
+
+              return;
+            }
+
+            setItemsErrors({});
+
             setFormData({
               ...formData,
               items: [
@@ -211,6 +253,9 @@ export function NewOrder() {
         >
           Adicionar Item
         </button>
+        {formErrors.items && (
+          <small className="text-red-600">{formErrors.items}</small>
+        )}
       </div>
       --------------------------------------------------------------
       <fieldset>
@@ -250,6 +295,15 @@ export function NewOrder() {
             <option value="bank_transfer">Transferência Bancária</option>
             <option value="other">Outro</option>
           </select>
+          {formErrors.paymentMethod && (
+            <small className="text-red-600">{formErrors.paymentMethod}</small>
+          )}
+        </fieldset>
+      </div>
+      --------------------------------------------------------------
+      <div>
+        <fieldset>
+          <legend>Resumo do Pedido</legend>
         </fieldset>
       </div>
       <div>
