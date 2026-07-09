@@ -28,8 +28,8 @@ export function createOrder(input: CreateOrderInput) {
   const now = new Date().toISOString();
 
   const order: Order = {
-    ...input,
     id: crypto.randomUUID(),
+    ...input,
     createdAt: now,
   };
 

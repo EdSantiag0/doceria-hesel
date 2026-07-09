@@ -4,6 +4,8 @@ import { useState } from "react";
 import { getClients } from "../../services/clientStorage";
 import type { CreateOrderItemInput } from "../../types/OrderItem";
 import type { CreateOrderInput } from "../../types/Order";
+import { createOrder } from "../../services/orderStorage";
+import { toast } from "react-toastify";
 
 const orderSchema = z.object({
   clientId: z.string().min(1, "Selecione um cliente."),
@@ -84,6 +86,7 @@ export function NewOrder() {
     event.preventDefault();
 
     const total = calculateOrderTotal();
+
     const finalData = { ...formData, orderTotal: total };
 
     const result = orderSchema.safeParse(finalData);
@@ -93,6 +96,18 @@ export function NewOrder() {
 
       return;
     }
+
+    createOrder(finalData);
+
+    toast.success("Pedido cadastrado com sucesso!");
+
+    setFormData(initialFormData);
+
+    setCurrentItem({
+      quantity: 1,
+      product: "",
+      unitValue: 0,
+    });
   }
 
   return (
