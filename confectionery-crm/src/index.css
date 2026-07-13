@@ -1,23 +1,39 @@
-:root {
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+@import "tailwindcss";
 
-  font: 16px/145% var(--sans);
-  color: #2f2926;
-  background: #f8f5f2;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme {
+  /* Cores de base */
+  --color-brand-900: #2f2926; /* Escuro, para textos e bordas */
+  --color-brand-500: #8d493a; /* Sua cor principal, para botões e destaque */
+  --color-brand-50: #fffaf6; /* Fundo do card */
+
+  /* Cores utilitárias */
+  --color-brand-border: #eaddd3; /* Uma variação mais escura que o fundo para bordas */
+  --color-text-muted: #736b66; /* Uma cor para textos secundários (o seu antigo highlight) */
 }
+@layer base {
+  :root {
+    font:
+      16px/145% system-ui,
+      "Segoe UI",
+      Roboto,
+      sans-serif;
+    color: var(--color-brand-900);
+    background: var(--color-brand-50);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-#root {
-  min-height: 100vh;
-}
+  #root {
+    min-height: 100vh;
+  }
 
-body {
-  margin: 0;
-}
+  body {
+    margin: 0;
+  }
 
-* {
-  box-sizing: border-box;
+  * {
+    box-sizing: border-box;
+  }
 }
