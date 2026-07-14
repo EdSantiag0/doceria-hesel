@@ -6,6 +6,7 @@ import type { CreateOrderItemInput } from "../../types/OrderItem";
 import type { CreateOrderInput } from "../../types/Order";
 import { createOrder } from "../../services/orderStorage";
 import { toast } from "react-toastify";
+import { Trash2 } from "lucide-react";
 
 const orderItemSchema = z.object({
   quantity: z.number().min(1, "A quantidade deve ser maior que zero."),
@@ -91,6 +92,13 @@ export function NewOrder() {
   const calculateOrderTotal = () => {
     return formData.items.reduce((acc, item) => acc + item.total, 0);
   };
+
+  function handleDeleteItem(itemId: string) {
+    setFormData((prev) => ({
+      ...prev,
+      items: prev.items.filter((item) => item.id !== itemId),
+    }));
+  }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -266,9 +274,22 @@ export function NewOrder() {
         )}
         <ul>
           {formData.items.map((item) => (
-            <li key={item.id}>
-              {item.quantity} {item.product} ={" "}
-              <strong>R$ {item.total.toFixed(2)}</strong>
+            <li
+              key={item.id}
+              className="flex items-center justify-between gap-4"
+            >
+              <span>
+                {item.quantity} {item.product} ={" "}
+                <strong>R$ {item.total.toFixed(2)}</strong>
+              </span>
+
+              <button
+                type="button"
+                onClick={() => handleDeleteItem(item.id)}
+                title="Remover item"
+              >
+                <Trash2 size={18} />
+              </button>
             </li>
           ))}
         </ul>
