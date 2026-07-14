@@ -10,6 +10,7 @@ import { Trash2 } from "lucide-react";
 import { orderItemSchema, orderSchema } from "./schemas/orderSchema";
 import { calculateOrderTotal } from "./utils/calculateOrderTotal";
 import { calculateItemTotal } from "./utils/calculateItemTotal";
+import { ClientSelect } from "./components/ClientSelect";
 
 type OrderFormData = z.infer<typeof orderSchema>;
 type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
@@ -95,38 +96,17 @@ export function NewOrder() {
   return (
     <form onSubmit={handleSubmit}>
       <div>
-        <fieldset>
-          <legend>Cliente</legend>
-
-          <label htmlFor="clientId"></label>
-
-          <select
-            id="clientId"
-            name="clientId"
-            value={formData.clientId}
-            onChange={(e) =>
-              setFormData({ ...formData, clientId: e.target.value })
-            }
-          >
-            <option value="">Selecione um cliente</option>
-            {clients
-              .sort((a, b) => a.name.localeCompare(b.name))
-              .map((client) => (
-                <option key={client.id} value={client.id}>
-                  {client.name}
-                </option>
-              ))}
-          </select>
-          {formErrors.clientId && (
-            <small className="text-red-600">{formErrors.clientId}</small>
-          )}
-          {clients.length === 0 && (
-            <small>
-              Nenhum cliente cadastrado. Cadastre um cliente antes de criar um
-              pedido.
-            </small>
-          )}
-        </fieldset>
+        <ClientSelect
+          clients={clients}
+          value={formData.clientId}
+          onChange={(id) =>
+            setFormData({
+              ...formData,
+              clientId: id,
+            })
+          }
+          error={formErrors.clientId}
+        />
       </div>
       --------------------------------------------------------------
       <div>
