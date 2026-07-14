@@ -8,6 +8,8 @@ import { createOrder } from "../../services/orderStorage";
 import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
 import { orderItemSchema, orderSchema } from "./schemas/orderSchema";
+import { calculateOrderTotal } from "./utils/calculateOrderTotal";
+import { calculateItemTotal } from "./utils/calculateItemTotal";
 
 type OrderFormData = z.infer<typeof orderSchema>;
 type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
@@ -45,10 +47,6 @@ export function NewOrder() {
     unitValue: 0,
   });
 
-  const calculateOrderTotal = () => {
-    return formData.items.reduce((acc, item) => acc + item.total, 0);
-  };
-
   function handleDeleteItem(itemId: string) {
     setFormData((prev) => ({
       ...prev,
@@ -59,7 +57,7 @@ export function NewOrder() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const total = calculateOrderTotal();
+    const total = calculateOrderTotal(formData.items);
 
     const finalData = { ...formData, orderTotal: total };
 
@@ -204,7 +202,10 @@ export function NewOrder() {
                 {
                   id: crypto.randomUUID(),
                   ...currentItem,
-                  total: currentItem.quantity * currentItem.unitValue,
+                  total: calculateItemTotal(
+                    currentItem.quantity,
+                    currentItem.unitValue,
+                  ),
                 },
               ],
             });
@@ -289,7 +290,7 @@ export function NewOrder() {
           {new Intl.NumberFormat("pt-BR", {
             style: "currency",
             currency: "BRL",
-          }).format(calculateOrderTotal())}
+          }).format(calculateOrderTotal(formData.items))}
         </strong>
       </div>
       --------------------------------------------------------------
