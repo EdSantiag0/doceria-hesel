@@ -10,7 +10,6 @@ import { calculateOrderTotal } from "./utils/calculateOrderTotal";
 import { calculateItemTotal } from "./utils/calculateItemTotal";
 import { ClientSelect } from "./components/ClientSelect";
 import { OrderItemsForm } from "./components/OrderItemsForm";
-import { OrderItemsList } from "./components/OrderItemsList";
 import { PaymentSelect } from "./components/PaymentSelect";
 import { OrderSummary } from "./components/OrderSummary";
 import { ReminderForm } from "./components/ReminderForm";
@@ -171,13 +170,6 @@ export function NewOrder() {
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
-        <OrderItemsList
-          items={formData.items}
-          onRemoveItem={handleRemoveItem}
-        />
-      </fieldset>
-      --------------------------------------------------------------
-      <fieldset>
         <PaymentSelect
           value={formData.paymentMethod}
           onChange={handlePaymentMethodChange}
@@ -186,7 +178,11 @@ export function NewOrder() {
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
-        <OrderSummary orderTotal={orderTotal} />
+        <OrderSummary
+          items={formData.items}
+          onRemoveItem={handleRemoveItem}
+          orderTotal={orderTotal}
+        />
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
