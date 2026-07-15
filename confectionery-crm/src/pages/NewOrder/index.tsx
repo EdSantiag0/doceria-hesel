@@ -1,9 +1,9 @@
+import type { CreateOrderItemInput } from "../../types/OrderItem";
+import type { CreateOrderInput } from "../../types/Order";
 import { z } from "zod";
 import { FormInput } from "../../components/FormInput";
 import { useState } from "react";
 import { getClients } from "../../services/clientStorage";
-import type { CreateOrderItemInput } from "../../types/OrderItem";
-import type { CreateOrderInput } from "../../types/Order";
 import { createOrder } from "../../services/orderStorage";
 import { toast } from "react-toastify";
 import { orderSchema } from "./schemas/orderSchema";
@@ -12,6 +12,7 @@ import { calculateItemTotal } from "./utils/calculateItemTotal";
 import { ClientSelect } from "./components/ClientSelect";
 import { OrderItemsForm } from "./components/OrderItemsForm";
 import { OrderItemsList } from "./components/OrderItemsList";
+import { OrderSummary } from "./components/OrderSummary";
 
 type OrderFormData = z.infer<typeof orderSchema>;
 type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
@@ -40,7 +41,9 @@ const initialFormData: CreateOrderInput = {
 export function NewOrder() {
   const [formData, setFormData] = useState(initialFormData);
   const [formErrors, setErrors] = useState<OrderFormErrors>({});
-  const [itemsErrors, setItemsErrors] = useState<ItemsError>({});
+
+  const orderTotal = calculateOrderTotal(formData.items);
+
   const clients = getClients();
 
   const [currentItem, setCurrentItem] = useState<CreateOrderItemInput>({
@@ -176,15 +179,7 @@ export function NewOrder() {
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
-        <legend>Resumo do Pedido</legend>
-
-        <span>Total do Pedido: </span>
-        <strong>
-          {new Intl.NumberFormat("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          }).format(calculateOrderTotal(formData.items))}
-        </strong>
+        <OrderSummary orderTotal={orderTotal} />
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
