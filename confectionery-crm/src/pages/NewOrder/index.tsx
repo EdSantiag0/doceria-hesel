@@ -1,7 +1,6 @@
 import type { CreateOrderItemInput } from "../../types/OrderItem";
 import type { CreateOrderInput } from "../../types/Order";
 import { z } from "zod";
-import { FormInput } from "../../components/FormInput";
 import { useState } from "react";
 import { getClients } from "../../services/clientStorage";
 import { createOrder } from "../../services/orderStorage";
@@ -14,6 +13,7 @@ import { OrderItemsForm } from "./components/OrderItemsForm";
 import { OrderItemsList } from "./components/OrderItemsList";
 import { PaymentSelect } from "./components/PaymentSelect";
 import { OrderSummary } from "./components/OrderSummary";
+import { ReminderForm } from "./components/ReminderForm";
 
 type OrderFormData = z.infer<typeof orderSchema>;
 type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
@@ -84,6 +84,26 @@ export function NewOrder() {
     setFormData({
       ...formData,
       paymentMethod,
+    });
+  }
+
+  function handleReminderDateChange(reminderDate: string) {
+    setFormData({
+      ...formData,
+      reminder: {
+        reminderDate,
+        description: formData.reminder?.description ?? "",
+      },
+    });
+  }
+
+  function handleReminderDescriptionChange(description: string) {
+    setFormData({
+      ...formData,
+      reminder: {
+        reminderDate: formData.reminder?.reminderDate ?? "",
+        description,
+      },
     });
   }
 
@@ -170,44 +190,14 @@ export function NewOrder() {
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
-        <legend>Lembrete</legend>
-
-        <FormInput
-          name="reminder.reminderDate"
-          label="Data"
-          type="date"
-          value={formData.reminder?.reminderDate ?? ""}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              reminder: {
-                reminderDate: e.target.value,
-                description: formData.reminder?.description ?? "",
-              },
-            })
-          }
-          placeholder="Informe a data do lembrete"
-        />
-        <FormInput
-          name="reminder.description"
-          label="Descrição"
-          type="text"
-          value={formData.reminder?.description ?? ""}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              reminder: {
-                reminderDate: formData.reminder?.reminderDate ?? "",
-                description: e.target.value,
-              },
-            })
-          }
-          placeholder="Informe a descrição do lembrete"
+        <ReminderForm
+          reminderDate={formData.reminder?.reminderDate ?? ""}
+          description={formData.reminder?.description ?? ""}
+          onReminderDateChange={handleReminderDateChange}
+          onDescriptionChange={handleReminderDescriptionChange}
+          error={formErrors.reminder}
         />
       </fieldset>
-      <div>
-        <button type="submit">Cadastrar Pedido</button>
-      </div>
     </form>
   );
 }
