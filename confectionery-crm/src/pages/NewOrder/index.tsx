@@ -7,10 +7,11 @@ import type { CreateOrderInput } from "../../types/Order";
 import { createOrder } from "../../services/orderStorage";
 import { toast } from "react-toastify";
 import { Trash2 } from "lucide-react";
-import { orderItemSchema, orderSchema } from "./schemas/orderSchema";
+import { orderSchema } from "./schemas/orderSchema";
 import { calculateOrderTotal } from "./utils/calculateOrderTotal";
 import { calculateItemTotal } from "./utils/calculateItemTotal";
 import { ClientSelect } from "./components/ClientSelect";
+import { OrderItemsForm } from "./components/OrderItemsForm";
 
 type OrderFormData = z.infer<typeof orderSchema>;
 type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
@@ -47,12 +48,35 @@ export function NewOrder() {
     product: "",
     unitValue: 0,
   });
-
+  //-------------------------------------------------------------------------
   function handleDeleteItem(itemId: string) {
     setFormData((prev) => ({
       ...prev,
       items: prev.items.filter((item) => item.id !== itemId),
     }));
+  }
+
+  function handleAddItem() {
+    setFormData({
+      ...formData,
+      items: [
+        ...formData.items,
+        {
+          id: crypto.randomUUID(),
+          ...currentItem,
+          total: calculateItemTotal(
+            currentItem.quantity,
+            currentItem.unitValue,
+          ),
+        },
+      ],
+    });
+
+    setCurrentItem({
+      quantity: 1,
+      product: "",
+      unitValue: 0,
+    });
   }
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -92,10 +116,10 @@ export function NewOrder() {
       unitValue: 0,
     });
   }
-
+  //------------------------------------------------------------------------------
   return (
     <form onSubmit={handleSubmit}>
-      <div>
+      <fieldset>
         <ClientSelect
           clients={clients}
           value={formData.clientId}
@@ -107,101 +131,16 @@ export function NewOrder() {
           }
           error={formErrors.clientId}
         />
-      </div>
-      --------------------------------------------------------------
-      <div>
-        <fieldset>
-          <legend>Itens do Pedido</legend>
-        </fieldset>
-        <FormInput
-          name="quantity"
-          label="Quantidade"
-          type="number"
-          value={currentItem.quantity}
-          error={itemsErrors.quantity}
-          onChange={(e) =>
-            setCurrentItem({
-              ...currentItem,
-              quantity: Number(e.target.value),
-            })
-          }
-          placeholder="Informe a quantidade"
+      </fieldset>
+      -------------------------------------------------------------------------
+      <fieldset>
+        <OrderItemsForm
+          currentItem={currentItem}
+          onChange={setCurrentItem}
+          onAddItem={handleAddItem}
+          error={formErrors.items}
         />
-        <FormInput
-          name="product"
-          label="Produto"
-          type="text"
-          value={currentItem.product}
-          error={itemsErrors.product}
-          onChange={(e) =>
-            setCurrentItem({
-              ...currentItem,
-              product: e.target.value,
-            })
-          }
-          placeholder="Informe o produto"
-        />
-        <FormInput
-          name="unitValue"
-          label="Valor Unitário"
-          type="number"
-          value={currentItem.unitValue}
-          error={itemsErrors.unitValue}
-          onChange={(e) =>
-            setCurrentItem({
-              ...currentItem,
-              unitValue: Number(e.target.value),
-            })
-          }
-          placeholder="Informe o valor unitário"
-          step="0.01"
-        />
-        <button
-          type="button"
-          onClick={() => {
-            const result = orderItemSchema.safeParse(currentItem);
-
-            if (!result.success) {
-              const fildsErrors = result.error.flatten().fieldErrors;
-
-              setItemsErrors({
-                quantity: fildsErrors.quantity?.[0],
-                product: fildsErrors.product?.[0],
-                unitValue: fildsErrors.unitValue?.[0],
-              });
-
-              return;
-            }
-
-            setItemsErrors({});
-
-            setFormData({
-              ...formData,
-              items: [
-                ...formData.items,
-                {
-                  id: crypto.randomUUID(),
-                  ...currentItem,
-                  total: calculateItemTotal(
-                    currentItem.quantity,
-                    currentItem.unitValue,
-                  ),
-                },
-              ],
-            });
-            setCurrentItem({
-              quantity: 1,
-              product: "",
-              unitValue: 0,
-            });
-          }}
-        >
-          Adicionar Item
-        </button>
-        {formErrors.items && (
-          <small className="text-red-600">{formErrors.items}</small>
-        )}
-      </div>
+      </fieldset>
       --------------------------------------------------------------
       <fieldset>
         <legend>Itens do Pedido</legend>
@@ -232,39 +171,34 @@ export function NewOrder() {
         </ul>
       </fieldset>
       --------------------------------------------------------------
-      <div>
-        <fieldset>
-          <legend>Pagamento</legend>
-          <select
-            id="paymentMethod"
-            value={formData.paymentMethod}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                paymentMethod: e.target
-                  .value as CreateOrderInput["paymentMethod"],
-              })
-            }
-          >
-            <option value="cash">Dinheiro</option>
-            <option value="credit_card">Cartão de Crédito</option>
-            <option value="debit_card">Cartão de Débito</option>
-            <option value="pix">PIX</option>
-            <option value="bank_transfer">Transferência Bancária</option>
-            <option value="other">Outro</option>
-          </select>
-          {formErrors.paymentMethod && (
-            <small className="text-red-600">{formErrors.paymentMethod}</small>
-          )}
-        </fieldset>
-      </div>
+      <fieldset>
+        <legend>Pagamento</legend>
+        <select
+          id="paymentMethod"
+          value={formData.paymentMethod}
+          onChange={(e) =>
+            setFormData({
+              ...formData,
+              paymentMethod: e.target
+                .value as CreateOrderInput["paymentMethod"],
+            })
+          }
+        >
+          <option value="cash">Dinheiro</option>
+          <option value="credit_card">Cartão de Crédito</option>
+          <option value="debit_card">Cartão de Débito</option>
+          <option value="pix">PIX</option>
+          <option value="bank_transfer">Transferência Bancária</option>
+          <option value="other">Outro</option>
+        </select>
+        {formErrors.paymentMethod && (
+          <small className="text-red-600">{formErrors.paymentMethod}</small>
+        )}
+      </fieldset>
       --------------------------------------------------------------
-      <div>
-        <fieldset>
-          <legend>Resumo do Pedido</legend>
-        </fieldset>
-      </div>
-      <div>
+      <fieldset>
+        <legend>Resumo do Pedido</legend>
+
         <span>Total do Pedido: </span>
         <strong>
           {new Intl.NumberFormat("pt-BR", {
@@ -272,12 +206,11 @@ export function NewOrder() {
             currency: "BRL",
           }).format(calculateOrderTotal(formData.items))}
         </strong>
-      </div>
+      </fieldset>
       --------------------------------------------------------------
-      <div>
-        <fieldset>
-          <legend>Lembrete</legend>
-        </fieldset>
+      <fieldset>
+        <legend>Lembrete</legend>
+
         <FormInput
           name="reminder.reminderDate"
           label="Data"
@@ -310,7 +243,7 @@ export function NewOrder() {
           }
           placeholder="Informe a descrição do lembrete"
         />
-      </div>
+      </fieldset>
       <div>
         <button type="submit">Cadastrar Pedido</button>
       </div>
