@@ -6,12 +6,12 @@ import type { CreateOrderItemInput } from "../../types/OrderItem";
 import type { CreateOrderInput } from "../../types/Order";
 import { createOrder } from "../../services/orderStorage";
 import { toast } from "react-toastify";
-import { Trash2 } from "lucide-react";
 import { orderSchema } from "./schemas/orderSchema";
 import { calculateOrderTotal } from "./utils/calculateOrderTotal";
 import { calculateItemTotal } from "./utils/calculateItemTotal";
 import { ClientSelect } from "./components/ClientSelect";
 import { OrderItemsForm } from "./components/OrderItemsForm";
+import { OrderItemsList } from "./components/OrderItemsList";
 
 type OrderFormData = z.infer<typeof orderSchema>;
 type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
@@ -49,12 +49,6 @@ export function NewOrder() {
     unitValue: 0,
   });
   //-------------------------------------------------------------------------
-  function handleDeleteItem(itemId: string) {
-    setFormData((prev) => ({
-      ...prev,
-      items: prev.items.filter((item) => item.id !== itemId),
-    }));
-  }
 
   function handleAddItem() {
     setFormData({
@@ -76,6 +70,13 @@ export function NewOrder() {
       quantity: 1,
       product: "",
       unitValue: 0,
+    });
+  }
+
+  function handleRemoveItem(id: string) {
+    setFormData({
+      ...formData,
+      items: formData.items.filter((item) => item.id !== id),
     });
   }
 
@@ -143,32 +144,10 @@ export function NewOrder() {
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
-        <legend>Itens do Pedido</legend>
-
-        {formData.items.length === 0 && (
-          <small>Nenhum item adicionado ao pedido.</small>
-        )}
-        <ul>
-          {formData.items.map((item) => (
-            <li
-              key={item.id}
-              className="flex items-center justify-between gap-4"
-            >
-              <span>
-                {item.quantity} {item.product} ={" "}
-                <strong>R$ {item.total.toFixed(2)}</strong>
-              </span>
-
-              <button
-                type="button"
-                onClick={() => handleDeleteItem(item.id)}
-                title="Remover item"
-              >
-                <Trash2 size={18} />
-              </button>
-            </li>
-          ))}
-        </ul>
+        <OrderItemsList
+          items={formData.items}
+          onRemoveItem={handleRemoveItem}
+        />
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
