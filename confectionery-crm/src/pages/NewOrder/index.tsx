@@ -12,16 +12,11 @@ import { calculateItemTotal } from "./utils/calculateItemTotal";
 import { ClientSelect } from "./components/ClientSelect";
 import { OrderItemsForm } from "./components/OrderItemsForm";
 import { OrderItemsList } from "./components/OrderItemsList";
+import { PaymentSelect } from "./components/PaymentSelect";
 import { OrderSummary } from "./components/OrderSummary";
 
 type OrderFormData = z.infer<typeof orderSchema>;
 type OrderFormErrors = Partial<Record<keyof OrderFormData, string>>;
-
-type ItemsError = {
-  quantity?: string;
-  product?: string;
-  unitValue?: string;
-};
 
 const initialFormData: CreateOrderInput = {
   clientId: "",
@@ -80,6 +75,15 @@ export function NewOrder() {
     setFormData({
       ...formData,
       items: formData.items.filter((item) => item.id !== id),
+    });
+  }
+
+  function handlePaymentMethodChange(
+    paymentMethod: CreateOrderInput["paymentMethod"],
+  ) {
+    setFormData({
+      ...formData,
+      paymentMethod,
     });
   }
 
@@ -154,28 +158,11 @@ export function NewOrder() {
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
-        <legend>Pagamento</legend>
-        <select
-          id="paymentMethod"
+        <PaymentSelect
           value={formData.paymentMethod}
-          onChange={(e) =>
-            setFormData({
-              ...formData,
-              paymentMethod: e.target
-                .value as CreateOrderInput["paymentMethod"],
-            })
-          }
-        >
-          <option value="cash">Dinheiro</option>
-          <option value="credit_card">Cartão de Crédito</option>
-          <option value="debit_card">Cartão de Débito</option>
-          <option value="pix">PIX</option>
-          <option value="bank_transfer">Transferência Bancária</option>
-          <option value="other">Outro</option>
-        </select>
-        {formErrors.paymentMethod && (
-          <small className="text-red-600">{formErrors.paymentMethod}</small>
-        )}
+          onChange={handlePaymentMethodChange}
+          error={formErrors.paymentMethod}
+        />
       </fieldset>
       --------------------------------------------------------------
       <fieldset>
