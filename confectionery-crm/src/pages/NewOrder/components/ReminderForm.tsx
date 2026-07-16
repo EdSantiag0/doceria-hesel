@@ -1,4 +1,5 @@
 import { FormInput } from "../../../components/FormInput";
+import { FormTextarea } from "../../../components/FormTextarea";
 
 interface ReminderFormProps {
   reminderDate: string;
@@ -27,13 +28,13 @@ export function ReminderForm({
         onChange={(e) => onReminderDateChange(e.target.value)}
       />
 
-      <FormInput
+      <FormTextarea
         name="reminder.description"
         label="Descrição"
-        type="text"
         value={description}
+        rows={5}
         onChange={(e) => onDescriptionChange(e.target.value)}
-        placeholder="Informe a descrição do lembrete"
+        placeholder="Ex.: Aniversário da Maria. Pedido para festa de aniversário."
       />
 
       {error && <small className="text-red-600">{error}</small>}

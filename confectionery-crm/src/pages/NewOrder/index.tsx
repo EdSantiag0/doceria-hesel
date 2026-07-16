@@ -109,9 +109,7 @@ export function NewOrder() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const total = calculateOrderTotal(formData.items);
-
-    const finalData = { ...formData, orderTotal: total };
+    const finalData = { ...formData, orderTotal };
 
     const result = orderSchema.safeParse(finalData);
 
@@ -146,54 +144,44 @@ export function NewOrder() {
   //------------------------------------------------------------------------------
   return (
     <form onSubmit={handleSubmit}>
-      <fieldset>
-        <ClientSelect
-          clients={clients}
-          value={formData.clientId}
-          onChange={(id) =>
-            setFormData({
-              ...formData,
-              clientId: id,
-            })
-          }
-          error={formErrors.clientId}
-        />
-      </fieldset>
+      <ClientSelect
+        clients={clients}
+        value={formData.clientId}
+        onChange={(id) =>
+          setFormData({
+            ...formData,
+            clientId: id,
+          })
+        }
+        error={formErrors.clientId}
+      />
       -------------------------------------------------------------------------
-      <fieldset>
-        <OrderItemsForm
-          currentItem={currentItem}
-          onChange={setCurrentItem}
-          onAddItem={handleAddItem}
-          error={formErrors.items}
-        />
-      </fieldset>
+      <OrderItemsForm
+        currentItem={currentItem}
+        onChange={setCurrentItem}
+        onAddItem={handleAddItem}
+        error={formErrors.items}
+      />
       --------------------------------------------------------------
-      <fieldset>
-        <PaymentSelect
-          value={formData.paymentMethod}
-          onChange={handlePaymentMethodChange}
-          error={formErrors.paymentMethod}
-        />
-      </fieldset>
+      <PaymentSelect
+        value={formData.paymentMethod}
+        onChange={handlePaymentMethodChange}
+        error={formErrors.paymentMethod}
+      />
       --------------------------------------------------------------
-      <fieldset>
-        <OrderSummary
-          items={formData.items}
-          onRemoveItem={handleRemoveItem}
-          orderTotal={orderTotal}
-        />
-      </fieldset>
+      <OrderSummary
+        items={formData.items}
+        onRemoveItem={handleRemoveItem}
+        orderTotal={orderTotal}
+      />
       --------------------------------------------------------------
-      <fieldset>
-        <ReminderForm
-          reminderDate={formData.reminder?.reminderDate ?? ""}
-          description={formData.reminder?.description ?? ""}
-          onReminderDateChange={handleReminderDateChange}
-          onDescriptionChange={handleReminderDescriptionChange}
-          error={formErrors.reminder}
-        />
-      </fieldset>
+      <ReminderForm
+        reminderDate={formData.reminder?.reminderDate ?? ""}
+        description={formData.reminder?.description ?? ""}
+        onReminderDateChange={handleReminderDateChange}
+        onDescriptionChange={handleReminderDescriptionChange}
+        error={formErrors.reminder}
+      />
     </form>
   );
 }
