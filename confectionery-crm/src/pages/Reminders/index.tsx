@@ -1,13 +1,30 @@
 // Pagina inicial para exibir lembretes de pedidos.
+import { ReminderCard } from "../../components/ReminderCard";
+import { getPendingReminders } from "./utils/getPendingReminders";
+
 export function Reminders() {
+  const reminders = getPendingReminders();
+
+  function handleComplete(orderId: string) {
+    console.log(orderId);
+  }
+
   return (
-    <div className="w-full max-w-[720px]">
-      <h2 className="mb-1.5 mt-0 text-2xl text-brand-900 font-bold">
-        Lembretes
-      </h2>
-      <p className="m-0 text-text-muted">
-        Os lembretes dos pedidos cadastrados aparecerão aqui.
-      </p>
+    <div className="flex flex-col gap-4">
+      {reminders.length === 0 ? (
+        <p>Nenhum lembrete disponível.</p>
+      ) : (
+        reminders.map((reminder) => (
+          <ReminderCard
+            key={reminder.orderId}
+            clientName={reminder.clientName}
+            reminderDate={reminder.reminderDate}
+            description={reminder.description}
+            lastOrder={reminder.lastOrder}
+            onComplete={() => handleComplete(reminder.orderId)}
+          />
+        ))
+      )}
     </div>
   );
 }

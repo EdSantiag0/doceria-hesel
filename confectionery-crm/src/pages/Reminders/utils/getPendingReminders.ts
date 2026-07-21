@@ -30,8 +30,7 @@ export function getPendingReminders() {
 
         description: order.reminder!.description,
 
-        lastOrder:
-          order.items.length > 0 ? order.items[0].product : "Pedido sem itens",
+        lastOrder: `${order.items[0].quantity}x ${order.items[0].product}`,
       };
     })
     .sort(
