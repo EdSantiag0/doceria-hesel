@@ -27,6 +27,7 @@ const initialFormData: CreateOrderInput = {
   reminder: {
     reminderDate: "",
     description: "",
+    isCompleted: false,
   },
 
   orderTotal: 0,
@@ -92,6 +93,7 @@ export function NewOrder() {
       reminder: {
         reminderDate,
         description: formData.reminder?.description ?? "",
+        isCompleted: formData.reminder?.isCompleted ?? false,
       },
     });
   }
@@ -102,6 +104,7 @@ export function NewOrder() {
       reminder: {
         reminderDate: formData.reminder?.reminderDate ?? "",
         description,
+        isCompleted: formData.reminder?.isCompleted ?? false,
       },
     });
   }

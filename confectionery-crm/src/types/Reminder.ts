@@ -5,7 +5,4 @@ export interface Reminder {
   description: string;
   isCompleted: boolean;
 }
-export type CreateReminderInput = Omit<
-  Reminder,
-  "id" | "orderId" | "isCompleted"
->;
+export type CreateReminderInput = Omit<Reminder, "id" | "orderId">;
