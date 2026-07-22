@@ -20,7 +20,7 @@ export function Reminders() {
             clientName={reminder.clientName}
             reminderDate={reminder.reminderDate}
             description={reminder.description}
-            lastOrder={reminder.lastOrder}
+            items={reminder.items}
             onComplete={() => handleComplete(reminder.orderId)}
           />
         ))

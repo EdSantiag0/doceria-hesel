@@ -15,7 +15,7 @@ const clientSchema = z.object({
   address: z
     .string()
     .trim()
-    .min(5, "Informe o endereco do cliente.")
+    .min(2, "Informe o endereco do cliente.")
     .max(200, "O endereco deve ter no maximo 200 caracteres."),
   phone: z
     .string()

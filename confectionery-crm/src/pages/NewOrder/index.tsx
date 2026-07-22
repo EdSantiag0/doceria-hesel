@@ -185,6 +185,7 @@ export function NewOrder() {
         onDescriptionChange={handleReminderDescriptionChange}
         error={formErrors.reminder}
       />
+      <button type="submit">Cadastrar pedido</button>
     </form>
   );
 }
