@@ -1,4 +1,4 @@
-import { AlertTriangle, CircleCheckBig, Trash2 } from "lucide-react";
+import { CircleCheckBig, Trash2 } from "lucide-react";
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -19,6 +19,7 @@ export function ConfirmDialog({
   confirmText = "Confirmar",
   cancelText = "Cancelar",
   variant = "primary",
+
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
@@ -41,13 +42,6 @@ export function ConfirmDialog({
   };
 
   const currentStyle = styles[variant];
-
-  const icon =
-    variant === "danger" ? (
-      <Trash2 className="h-10 w-10 text-red-600" />
-    ) : (
-      <CircleCheckBig className="h-10 w-10 text-green-600" />
-    );
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">

@@ -1,11 +1,17 @@
 // Pagina para listar e pesquisar clientes cadastrados.
 import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import type { Client } from "../../types/Client";
 import { ClientCard } from "../../components/ClientCard";
-import { getClients } from "../../services/clientStorage";
+import { ConfirmDialog } from "../../components/ConfirmDialog";
+import { getClients, deleteClient } from "../../services/clientStorage";
+import { deleteOrdersByClient } from "../../services/orderStorage";
 
 export function Clients() {
   const [search, setSearch] = useState("");
-  const [clients] = useState(() => getClients());
+  const [clients, setClients] = useState(() => getClients());
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const filteredClients = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -18,6 +24,28 @@ export function Clients() {
       client.name.toLowerCase().includes(normalizedSearch),
     );
   }, [clients, search]);
+
+  function handleDelete(client: Client) {
+    setSelectedClient(client);
+
+    setOpenDeleteDialog(true);
+  }
+
+  function confirmDelete() {
+    if (!selectedClient) return;
+
+    deleteOrdersByClient(selectedClient.id);
+    deleteClient(selectedClient.id);
+
+    setClients((prev) =>
+      prev.filter((client) => client.id !== selectedClient.id),
+    );
+
+    setOpenDeleteDialog(false);
+    setSelectedClient(null);
+
+    toast.success("Cliente removido com sucesso!");
+  }
 
   return (
     <div className="flex w-full max-w-[840px] flex-col gap-[18px]">
@@ -47,7 +75,12 @@ export function Clients() {
       <div className="grid gap-3">
         {filteredClients.length > 0 ? (
           filteredClients.map((client) => (
-            <ClientCard key={client.id} client={client} />
+            <ClientCard
+              key={client.id}
+              client={client}
+              onDelete={handleDelete}
+              onEdit={() => {}}
+            />
           ))
         ) : (
           <div className="rounded-lg border border-dashed border-[--color-brand-border] bg-[--color-brand-50] p-6 text-center">
@@ -60,6 +93,15 @@ export function Clients() {
           </div>
         )}
       </div>
+      <ConfirmDialog
+        isOpen={openDeleteDialog}
+        title="Excluir cliente"
+        message="Tem certeza que deseja excluir este cliente?"
+        confirmText="Excluir"
+        variant="danger"
+        onCancel={() => setOpenDeleteDialog(false)}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }

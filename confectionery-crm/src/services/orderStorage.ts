@@ -40,6 +40,14 @@ export function createOrder(input: CreateOrderInput) {
   return order;
 }
 
+export function deleteOrdersByClient(clientId: string) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.filter((order) => order.clientId !== clientId);
+
+  saveOrders(updatedOrders);
+}
+
 export function completeOrderReminder(orderId: string) {
   const orders = readOrders();
 

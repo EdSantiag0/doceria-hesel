@@ -3,12 +3,16 @@ import type { Client } from "../../types/Client";
 import { useMemo, useState } from "react";
 import { getOrders } from "../../services/orderStorage";
 import { OrderCard } from "../OrderCard";
+import { Pencil, Trash2 } from "lucide-react";
 
 interface ClientCardProps {
   client: Client;
+
+  onEdit: (client: Client) => void;
+  onDelete: (client: Client) => void;
 }
 
-export function ClientCard({ client }: ClientCardProps) {
+export function ClientCard({ client, onDelete, onEdit }: ClientCardProps) {
   const [expanded, setExpanded] = useState(false);
 
   const orders = useMemo(() => {
@@ -31,6 +35,23 @@ export function ClientCard({ client }: ClientCardProps) {
         >
           {client.phone}
         </a>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => onEdit(client)}
+            className="rounded-md bg-amber-500 p-2 text-white hover:bg-amber-600"
+          >
+            <Pencil size={18} />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onDelete(client)}
+            className="rounded-md bg-red-600 p-2 text-white hover:bg-red-700"
+          >
+            <Trash2 size={18} />
+          </button>
+        </div>
         <div className="flex items-center gap-3">
           <span className="text-sm text-[#77675f]">
             {orders.length} pedido(s)
