@@ -1,12 +1,19 @@
 // Pagina inicial para exibir lembretes de pedidos.
+import { useState } from "react";
 import { ReminderCard } from "../../components/ReminderCard";
 import { getPendingReminders } from "./utils/getPendingReminders";
+import { completeOrderReminder } from "../../services/orderStorage";
+import { toast } from "react-toastify";
 
 export function Reminders() {
-  const reminders = getPendingReminders();
+  const [reminders, setReminders] = useState(getPendingReminders());
 
   function handleComplete(orderId: string) {
-    console.log(orderId);
+    completeOrderReminder(orderId);
+
+    setReminders(getPendingReminders());
+
+    toast.success("Lembrete concluído com sucesso!");
   }
 
   return (

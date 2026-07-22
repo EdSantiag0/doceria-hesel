@@ -39,3 +39,24 @@ export function createOrder(input: CreateOrderInput) {
 
   return order;
 }
+
+export function completeOrderReminder(orderId: string) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.map((order) => {
+    if (order.id !== orderId || !order.reminder) {
+      return order;
+    }
+
+    return {
+      ...order,
+      reminder: {
+        ...order.reminder,
+        isCompleted: true,
+      },
+      updatedAt: new Date().toISOString(),
+    };
+  });
+
+  saveOrders(updatedOrders);
+}
