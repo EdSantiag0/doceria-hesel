@@ -54,4 +54,6 @@ export function updateClient(updatedClient: Client) {
   );
 
   saveClients(updatedClients);
+
+  return updateClient;
 }

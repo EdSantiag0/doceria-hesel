@@ -22,7 +22,9 @@ export function ReminderCard({
 
       <div className="space-y-3">
         <div>
-          <span className="font-semibold text-[#8d493a]">Data cadastrada:</span>
+          <span className="font-semibold text-[#8d493a]">
+            Data cadastrada:{" "}
+          </span>
           {reminderDate.split("-").reverse().join("/")}
         </div>
 

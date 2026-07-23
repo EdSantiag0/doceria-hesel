@@ -6,12 +6,15 @@ import { ClientCard } from "../../components/ClientCard";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import { getClients, deleteClient } from "../../services/clientStorage";
 import { deleteOrdersByClient } from "../../services/orderStorage";
+import { EditClientDialog } from "../../components/EditClientDialog";
+import { updateClient } from "../../services/clientStorage";
 
 export function Clients() {
   const [search, setSearch] = useState("");
   const [clients, setClients] = useState(() => getClients());
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
 
   const filteredClients = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -47,6 +50,22 @@ export function Clients() {
     toast.success("Cliente removido com sucesso!");
   }
 
+  function handleEdit(client: Client) {
+    setSelectedClient(client);
+    setOpenEditDialog(true);
+  }
+
+  function confirmEdit(client: Client) {
+    updateClient(client);
+
+    toast.success("Cliente atualizado com sucesso!");
+
+    setOpenEditDialog(false);
+    setSelectedClient(null);
+
+    setClients(getClients());
+  }
+
   return (
     <div className="flex w-full max-w-[840px] flex-col gap-[18px]">
       <div className="flex flex-col items-start justify-between gap-[18px] sm:flex-row">
@@ -79,7 +98,7 @@ export function Clients() {
               key={client.id}
               client={client}
               onDelete={handleDelete}
-              onEdit={() => {}}
+              onEdit={handleEdit}
             />
           ))
         ) : (
@@ -101,6 +120,12 @@ export function Clients() {
         variant="danger"
         onCancel={() => setOpenDeleteDialog(false)}
         onConfirm={confirmDelete}
+      />
+      <EditClientDialog
+        isOpen={openEditDialog}
+        client={selectedClient}
+        onCancel={() => setOpenEditDialog(false)}
+        onSave={confirmEdit}
       />
     </div>
   );
