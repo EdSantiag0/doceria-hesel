@@ -5,16 +5,23 @@ import type { Client } from "../../types/Client";
 import { ClientCard } from "../../components/ClientCard";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import { getClients, deleteClient } from "../../services/clientStorage";
-import { deleteOrdersByClient } from "../../services/orderStorage";
+import {
+  deleteOrdersByClient,
+  deleteOrder,
+  getOrders,
+} from "../../services/orderStorage";
 import { EditClientDialog } from "../../components/EditClientDialog";
 import { updateClient } from "../../services/clientStorage";
 
 export function Clients() {
   const [search, setSearch] = useState("");
   const [clients, setClients] = useState(() => getClients());
+  const [orders, setOrders] = useState(() => getOrders());
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [openDeleteOrderDialog, setOpenDeleteOrderDialog] = useState(false);
 
   const filteredClients = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -40,9 +47,8 @@ export function Clients() {
     deleteOrdersByClient(selectedClient.id);
     deleteClient(selectedClient.id);
 
-    setClients((prev) =>
-      prev.filter((client) => client.id !== selectedClient.id),
-    );
+    setClients(getClients());
+    setOrders(getOrders());
 
     setOpenDeleteDialog(false);
     setSelectedClient(null);
@@ -64,6 +70,24 @@ export function Clients() {
     setSelectedClient(null);
 
     setClients(getClients());
+  }
+
+  function handleDeleteOrder(orderId: string) {
+    setSelectedOrderId(orderId);
+
+    setOpenDeleteOrderDialog(true);
+  }
+
+  function confirmDeleteOrder() {
+    if (!selectedOrderId) return;
+
+    deleteOrder(selectedOrderId);
+    setOrders(getOrders());
+
+    toast.success("Pedido removido com sucesso!");
+
+    setOpenDeleteOrderDialog(false);
+    setSelectedOrderId(null);
   }
 
   return (
@@ -97,8 +121,10 @@ export function Clients() {
             <ClientCard
               key={client.id}
               client={client}
+              orders={orders.filter((order) => order.clientId === client.id)}
               onDelete={handleDelete}
               onEdit={handleEdit}
+              onDeleteOrder={handleDeleteOrder}
             />
           ))
         ) : (
@@ -120,6 +146,15 @@ export function Clients() {
         variant="danger"
         onCancel={() => setOpenDeleteDialog(false)}
         onConfirm={confirmDelete}
+      />
+      <ConfirmDialog
+        isOpen={openDeleteOrderDialog}
+        title="Excluir pedido"
+        message="Tem certeza que deseja excluir este pedido?"
+        confirmText="Excluir"
+        variant="danger"
+        onCancel={() => setOpenDeleteOrderDialog(false)}
+        onConfirm={confirmDeleteOrder}
       />
       <EditClientDialog
         isOpen={openEditDialog}

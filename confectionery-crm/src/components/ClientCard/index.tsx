@@ -1,23 +1,27 @@
 // Cartao com os dados resumidos de um cliente.
 import type { Client } from "../../types/Client";
-import { useMemo, useState } from "react";
-import { getOrders } from "../../services/orderStorage";
+import type { Order } from "../../types/Order";
+import { useState } from "react";
 import { OrderCard } from "../OrderCard";
 import { Pencil, Trash2 } from "lucide-react";
 
 interface ClientCardProps {
   client: Client;
+  orders: Order[];
 
   onEdit: (client: Client) => void;
   onDelete: (client: Client) => void;
+  onDeleteOrder: (orderId: string) => void;
 }
 
-export function ClientCard({ client, onDelete, onEdit }: ClientCardProps) {
+export function ClientCard({
+  client,
+  orders,
+  onDelete,
+  onEdit,
+  onDeleteOrder,
+}: ClientCardProps) {
   const [expanded, setExpanded] = useState(false);
-
-  const orders = useMemo(() => {
-    return getOrders().filter((order) => order.clientId === client.id);
-  }, [client.id]);
 
   return (
     <div className="rounded-lg border border-[#e7ddd5] bg-[#fffaf6]">
@@ -69,7 +73,7 @@ export function ClientCard({ client, onDelete, onEdit }: ClientCardProps) {
         </div>
       </article>
 
-      {expanded && <OrderCard orders={orders} />}
+      {expanded && <OrderCard orders={orders} onDeleteOrder={onDeleteOrder} />}
     </div>
   );
 }

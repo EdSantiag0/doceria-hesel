@@ -68,3 +68,11 @@ export function completeOrderReminder(orderId: string) {
 
   saveOrders(updatedOrders);
 }
+
+export function deleteOrder(orderId: string) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.filter((order) => order.id !== orderId);
+
+  saveOrders(updatedOrders);
+}

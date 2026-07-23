@@ -3,14 +3,21 @@ import { Trash2 } from "lucide-react";
 
 interface OrderSummaryProps {
   items: OrderItem[];
-  onRemoveItem: (id: string) => void;
   orderTotal: number;
+
+  onRemoveItem: (id: string) => void;
+
+  showDeleteOrder?: boolean;
+
+  onDeleteOrder?: () => void;
 }
 
 export function OrderSummary({
   items,
   onRemoveItem,
   orderTotal,
+  showDeleteOrder,
+  onDeleteOrder,
 }: OrderSummaryProps) {
   return (
     <fieldset>
@@ -51,6 +58,15 @@ export function OrderSummary({
           }).format(orderTotal)}
         </strong>
       </div>
+      {showDeleteOrder && (
+        <button
+          type="button"
+          onClick={onDeleteOrder}
+          className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+        >
+          Excluir Pedido
+        </button>
+      )}
     </fieldset>
   );
 }
