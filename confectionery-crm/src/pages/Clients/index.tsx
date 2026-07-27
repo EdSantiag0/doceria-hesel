@@ -1,11 +1,35 @@
 // Pagina para listar e pesquisar clientes cadastrados.
 import { useMemo, useState } from "react";
+import { toast } from "react-toastify";
+import type { Client } from "../../types/Client";
 import { ClientCard } from "../../components/ClientCard";
-import { getClients } from "../../services/clientStorage";
+import {
+  getClients,
+  deleteClient,
+  updateClient,
+} from "../../services/clientStorage";
+import { EditClientDialog } from "../../components/EditClientDialog";
+import type { Order } from "../../types/Order";
+import {
+  deleteOrdersByClient,
+  deleteOrder,
+  getOrders,
+  updateOrder,
+} from "../../services/orderStorage";
+import { EditOrderDialog } from "../../components/EditOrderDialog";
+import { ConfirmDialog } from "../../components/ConfirmDialog";
 
 export function Clients() {
   const [search, setSearch] = useState("");
-  const [clients] = useState(() => getClients());
+  const [clients, setClients] = useState(() => getClients());
+  const [orders, setOrders] = useState(() => getOrders());
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [openDeleteOrderDialog, setOpenDeleteOrderDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [openEditOrderDialog, setOpenEditOrderDialog] = useState(false);
 
   const filteredClients = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -18,6 +42,79 @@ export function Clients() {
       client.name.toLowerCase().includes(normalizedSearch),
     );
   }, [clients, search]);
+
+  function handleDelete(client: Client) {
+    setSelectedClient(client);
+
+    setOpenDeleteDialog(true);
+  }
+
+  function confirmDelete() {
+    if (!selectedClient) return;
+
+    deleteOrdersByClient(selectedClient.id);
+    deleteClient(selectedClient.id);
+
+    setClients(getClients());
+    setOrders(getOrders());
+
+    setOpenDeleteDialog(false);
+    setSelectedClient(null);
+
+    toast.success("Cliente removido com sucesso!");
+  }
+
+  function handleEdit(client: Client) {
+    setSelectedClient(client);
+    setOpenEditDialog(true);
+  }
+
+  function confirmEdit(client: Client) {
+    updateClient(client);
+
+    toast.success("Cliente atualizado com sucesso!");
+
+    setOpenEditDialog(false);
+    setSelectedClient(null);
+
+    setClients(getClients());
+  }
+
+  function handleDeleteOrder(orderId: string) {
+    setSelectedOrderId(orderId);
+
+    setOpenDeleteOrderDialog(true);
+  }
+
+  function confirmDeleteOrder() {
+    if (!selectedOrderId) return;
+
+    deleteOrder(selectedOrderId);
+    setOrders(getOrders());
+
+    toast.success("Pedido removido com sucesso!");
+
+    setOpenDeleteOrderDialog(false);
+    setSelectedOrderId(null);
+  }
+
+  function handleEditOrder(order: Order) {
+    setSelectedOrder(order);
+
+    setOpenEditOrderDialog(true);
+  }
+
+  function confirmEditOrder(order: Order) {
+    updateOrder(order);
+
+    setOrders(getOrders());
+
+    toast.success("Pedido atualizado com sucesso!");
+
+    setOpenEditOrderDialog(false);
+
+    setSelectedOrder(null);
+  }
 
   return (
     <div className="flex w-full max-w-[840px] flex-col gap-[18px]">
@@ -47,7 +144,15 @@ export function Clients() {
       <div className="grid gap-3">
         {filteredClients.length > 0 ? (
           filteredClients.map((client) => (
-            <ClientCard key={client.id} client={client} />
+            <ClientCard
+              key={client.id}
+              client={client}
+              orders={orders.filter((order) => order.clientId === client.id)}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+              onDeleteOrder={handleDeleteOrder}
+              onEditOrder={handleEditOrder}
+            />
           ))
         ) : (
           <div className="rounded-lg border border-dashed border-[--color-brand-border] bg-[--color-brand-50] p-6 text-center">
@@ -60,6 +165,36 @@ export function Clients() {
           </div>
         )}
       </div>
+      <ConfirmDialog
+        isOpen={openDeleteDialog}
+        title="Excluir cliente"
+        message="Tem certeza que deseja excluir este cliente?"
+        confirmText="Excluir"
+        variant="danger"
+        onCancel={() => setOpenDeleteDialog(false)}
+        onConfirm={confirmDelete}
+      />
+      <ConfirmDialog
+        isOpen={openDeleteOrderDialog}
+        title="Excluir pedido"
+        message="Tem certeza que deseja excluir este pedido?"
+        confirmText="Excluir"
+        variant="danger"
+        onCancel={() => setOpenDeleteOrderDialog(false)}
+        onConfirm={confirmDeleteOrder}
+      />
+      <EditClientDialog
+        isOpen={openEditDialog}
+        client={selectedClient}
+        onCancel={() => setOpenEditDialog(false)}
+        onSave={confirmEdit}
+      />
+      <EditOrderDialog
+        isOpen={openEditOrderDialog}
+        order={selectedOrder}
+        onCancel={() => setOpenEditOrderDialog(false)}
+        onSave={confirmEditOrder}
+      />
     </div>
   );
 }

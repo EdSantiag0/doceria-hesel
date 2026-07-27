@@ -39,3 +39,55 @@ export function createOrder(input: CreateOrderInput) {
 
   return order;
 }
+
+export function deleteOrdersByClient(clientId: string) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.filter((order) => order.clientId !== clientId);
+
+  saveOrders(updatedOrders);
+}
+
+export function completeOrderReminder(orderId: string) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.map((order) => {
+    if (order.id !== orderId || !order.reminder) {
+      return order;
+    }
+
+    return {
+      ...order,
+      reminder: {
+        ...order.reminder,
+        isCompleted: true,
+      },
+      updatedAt: new Date().toISOString(),
+    };
+  });
+
+  saveOrders(updatedOrders);
+}
+
+export function deleteOrder(orderId: string) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.filter((order) => order.id !== orderId);
+
+  saveOrders(updatedOrders);
+}
+
+export function updateOrder(updatedOrder: Order) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.map((order) =>
+    order.id === updatedOrder.id
+      ? {
+          ...updatedOrder,
+          updatedAt: new Date().toISOString(),
+        }
+      : order,
+  );
+
+  saveOrders(updatedOrders);
+}
