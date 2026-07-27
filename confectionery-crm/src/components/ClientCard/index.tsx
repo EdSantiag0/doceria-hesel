@@ -73,7 +73,17 @@ export function ClientCard({
         </div>
       </article>
 
-      {expanded && <OrderCard orders={orders} onDeleteOrder={onDeleteOrder} />}
+      {expanded && (
+        <div className="border-t border-[#e7ddd5] p-4 space-y-3">
+          {orders.map((order) => (
+            <OrderCard
+              key={order.id}
+              order={order}
+              onDeleteOrder={onDeleteOrder}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

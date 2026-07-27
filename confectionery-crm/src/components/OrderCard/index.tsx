@@ -1,56 +1,58 @@
 // Cartão de dados do pedido, é apresentado na aba Clientes
 import { Trash2 } from "lucide-react";
 import type { Order } from "../../types/Order";
+import { paymentMethodLabel } from "../../utils/paymentMethodLabel";
 
 interface OrderCardProps {
-  orders: Order[];
+  order: Order;
 
   onDeleteOrder: (orderId: string) => void;
 }
 
-export function OrderCard({ orders, onDeleteOrder }: OrderCardProps) {
+export function OrderCard({ order, onDeleteOrder }: OrderCardProps) {
   return (
-    <div className="border-t border-[#e7ddd5] p-4">
-      {orders.map((order) => (
-        <div key={order.id} className="mb-4 rounded-lg border p-3 last:mb-0">
-          <div className="mb-2 flex items-center justify-between">
-            <strong>Pedido</strong>
+    <div className="rounded-lg border border-[#e7ddd5] bg-white p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <strong>Pedido</strong>
 
-            <button
-              type="button"
-              onClick={() => onDeleteOrder(order.id)}
-              className="mt-2 rounded bg-red-600 px-3 py-1 text-white hover:bg-red-700"
-            >
-              <Trash2 size={16} />
-            </button>
-          </div>
-          <ul className="mt-2">
-            {order.items.map((item) => (
-              <li key={item.id}>
-                {item.quantity}x {item.product} — R$ {item.total.toFixed(2)}
-              </li>
-            ))}
-          </ul>
+        <button
+          type="button"
+          onClick={() => onDeleteOrder(order.id)}
+          className="rounded bg-red-600 p-2 text-white hover:bg-red-700"
+        >
+          <Trash2 size={16} />
+        </button>
+      </div>
 
-          <p className="mt-2">
-            <strong>Total:</strong>{" "}
+      <ul className="space-y-1">
+        {order.items.map((item) => (
+          <li key={item.id}>
+            {item.quantity}x {item.product} —{" "}
             {new Intl.NumberFormat("pt-BR", {
               style: "currency",
               currency: "BRL",
-            }).format(order.orderTotal)}
-          </p>
+            }).format(item.total)}
+          </li>
+        ))}
+      </ul>
 
-          <p>
-            <strong>Pagamento:</strong> {order.paymentMethod}
-          </p>
+      <p className="mt-3">
+        <strong>Total:</strong>{" "}
+        {new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        }).format(order.orderTotal)}
+      </p>
 
-          {order.reminder && (
-            <p>
-              <strong>Lembrete:</strong> {order.reminder.description}
-            </p>
-          )}
-        </div>
-      ))}
+      <p>
+        <strong>Pagamento:</strong> {paymentMethodLabel(order.paymentMethod)}
+      </p>
+
+      {order.reminder && (
+        <p>
+          <strong>Lembrete:</strong> {order.reminder.description}
+        </p>
+      )}
     </div>
   );
 }
