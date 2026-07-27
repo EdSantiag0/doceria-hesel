@@ -11,6 +11,7 @@ interface ClientCardProps {
 
   onEdit: (client: Client) => void;
   onDelete: (client: Client) => void;
+  onEditOrder: (order: Order) => void;
   onDeleteOrder: (orderId: string) => void;
 }
 
@@ -19,6 +20,7 @@ export function ClientCard({
   orders,
   onDelete,
   onEdit,
+  onEditOrder,
   onDeleteOrder,
 }: ClientCardProps) {
   const [expanded, setExpanded] = useState(false);
@@ -79,6 +81,7 @@ export function ClientCard({
             <OrderCard
               key={order.id}
               order={order}
+              onEditOrder={onEditOrder}
               onDeleteOrder={onDeleteOrder}
             />
           ))}

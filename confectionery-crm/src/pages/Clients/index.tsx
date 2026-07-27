@@ -3,15 +3,21 @@ import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import type { Client } from "../../types/Client";
 import { ClientCard } from "../../components/ClientCard";
-import { ConfirmDialog } from "../../components/ConfirmDialog";
-import { getClients, deleteClient } from "../../services/clientStorage";
+import {
+  getClients,
+  deleteClient,
+  updateClient,
+} from "../../services/clientStorage";
+import { EditClientDialog } from "../../components/EditClientDialog";
+import type { Order } from "../../types/Order";
 import {
   deleteOrdersByClient,
   deleteOrder,
   getOrders,
+  updateOrder,
 } from "../../services/orderStorage";
-import { EditClientDialog } from "../../components/EditClientDialog";
-import { updateClient } from "../../services/clientStorage";
+import { EditOrderDialog } from "../../components/EditOrderDialog";
+import { ConfirmDialog } from "../../components/ConfirmDialog";
 
 export function Clients() {
   const [search, setSearch] = useState("");
@@ -22,6 +28,8 @@ export function Clients() {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
   const [openDeleteOrderDialog, setOpenDeleteOrderDialog] = useState(false);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [openEditOrderDialog, setOpenEditOrderDialog] = useState(false);
 
   const filteredClients = useMemo(() => {
     const normalizedSearch = search.trim().toLowerCase();
@@ -90,6 +98,24 @@ export function Clients() {
     setSelectedOrderId(null);
   }
 
+  function handleEditOrder(order: Order) {
+    setSelectedOrder(order);
+
+    setOpenEditOrderDialog(true);
+  }
+
+  function confirmEditOrder(order: Order) {
+    updateOrder(order);
+
+    setOrders(getOrders());
+
+    toast.success("Pedido atualizado com sucesso!");
+
+    setOpenEditOrderDialog(false);
+
+    setSelectedOrder(null);
+  }
+
   return (
     <div className="flex w-full max-w-[840px] flex-col gap-[18px]">
       <div className="flex flex-col items-start justify-between gap-[18px] sm:flex-row">
@@ -125,6 +151,7 @@ export function Clients() {
               onDelete={handleDelete}
               onEdit={handleEdit}
               onDeleteOrder={handleDeleteOrder}
+              onEditOrder={handleEditOrder}
             />
           ))
         ) : (
@@ -161,6 +188,12 @@ export function Clients() {
         client={selectedClient}
         onCancel={() => setOpenEditDialog(false)}
         onSave={confirmEdit}
+      />
+      <EditOrderDialog
+        isOpen={openEditOrderDialog}
+        order={selectedOrder}
+        onCancel={() => setOpenEditOrderDialog(false)}
+        onSave={confirmEditOrder}
       />
     </div>
   );

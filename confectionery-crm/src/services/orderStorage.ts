@@ -76,3 +76,18 @@ export function deleteOrder(orderId: string) {
 
   saveOrders(updatedOrders);
 }
+
+export function updateOrder(updatedOrder: Order) {
+  const orders = readOrders();
+
+  const updatedOrders = orders.map((order) =>
+    order.id === updatedOrder.id
+      ? {
+          ...updatedOrder,
+          updatedAt: new Date().toISOString(),
+        }
+      : order,
+  );
+
+  saveOrders(updatedOrders);
+}
