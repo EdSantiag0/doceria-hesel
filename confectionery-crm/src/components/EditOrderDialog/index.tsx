@@ -5,8 +5,8 @@ import type { CreateOrderItemInput } from "../../types/OrderItem";
 
 import { getClients } from "../../services/clientStorage";
 
-import { calculateOrderTotal } from "../../pages/NewOrder/utils/calculateOrderTotal";
-import { calculateItemTotal } from "../../pages/NewOrder/utils/calculateItemTotal";
+import { calculateOrderTotal } from "../../business/order/calculateOrderTotal";
+import { calculateItemTotal } from "../../business/order/calculateItemTotal";
 
 import { OrderItemsForm } from "../../pages/NewOrder/components/OrderItemsForm";
 import { PaymentSelect } from "../../pages/NewOrder/components/PaymentSelect";
