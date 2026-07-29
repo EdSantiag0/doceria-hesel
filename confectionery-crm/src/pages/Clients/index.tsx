@@ -11,12 +11,12 @@ import {
 import { EditClientDialog } from "../../components/EditClientDialog";
 import type { Order } from "../../types/Order";
 import {
-  deleteOrdersByClient,
   deleteOrder,
   getOrders,
   updateOrder,
 } from "../../services/orderStorage";
 import { EditOrderDialog } from "../../components/EditOrderDialog";
+import { deleteOrdersByClient } from "../../business/order/deleteClientOrders";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 
 export function Clients() {

@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
 import { ReminderCard } from "../../components/ReminderCard";
-import { getPendingReminders } from "./utils/getPendingReminders";
-import { completeOrderReminder } from "../../services/orderStorage";
+import { getPendingReminders } from "../../business/reminder/getPendingReminders";
+import { completeReminder } from "../../business/reminder/completeReminder";
 import { toast } from "react-toastify";
 
 export function Reminders() {
@@ -14,7 +14,7 @@ export function Reminders() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   function handleComplete(orderId: string) {
-    completeOrderReminder(orderId);
+    completeReminder(orderId);
 
     setReminders(getPendingReminders());
 

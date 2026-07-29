@@ -1,4 +1,4 @@
-import type { PaymentMethod } from "../types/Order";
+import type { PaymentMethod } from "../../types/Order";
 
 const labels: Record<PaymentMethod, string> = {
   cash: "Dinheiro",

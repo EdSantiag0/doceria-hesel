@@ -1,5 +1,5 @@
-import { getClients } from "../../../services/clientStorage";
-import { getOrders } from "../../../services/orderStorage";
+import { getClients } from "../../services/clientStorage";
+import { getOrders } from "../../services/orderStorage";
 import { shouldShowReminder } from "./shouldShowReminder";
 
 export function getPendingReminders() {

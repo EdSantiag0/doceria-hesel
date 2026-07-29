@@ -1,5 +1,6 @@
 import type { OrderItem } from "../../../types/OrderItem";
 import { Trash2 } from "lucide-react";
+import { formatCurrency } from "../../../utils/format/formatCurrency";
 
 interface OrderSummaryProps {
   items: OrderItem[];
@@ -38,7 +39,7 @@ export function OrderSummary({
               </div>
 
               <div className="flex items-center gap-4">
-                <strong>R$ {item.total.toFixed(2)}</strong>
+                <strong>{formatCurrency(item.total)}</strong>
 
                 <button type="button" onClick={() => onRemoveItem(item.id)}>
                   <Trash2 size={16} />
@@ -51,12 +52,7 @@ export function OrderSummary({
       <div className="flex items-center justify-between">
         <span>Total do Pedido:</span>
 
-        <strong>
-          {new Intl.NumberFormat("pt-BR", {
-            style: "currency",
-            currency: "BRL",
-          }).format(orderTotal)}
-        </strong>
+        <strong>{formatCurrency(orderTotal)}</strong>
       </div>
       {showDeleteOrder && (
         <button

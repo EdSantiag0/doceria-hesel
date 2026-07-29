@@ -1,7 +1,8 @@
 // Cartão de dados do pedido, é apresentado na aba Clientes
 import { Pencil, Trash2 } from "lucide-react";
 import type { Order } from "../../types/Order";
-import { paymentMethodLabel } from "../../utils/paymentMethodLabel";
+import { paymentMethodLabel } from "../../utils/format/formatpaymentMethod";
+import { formatCurrency } from "../../utils/format/formatCurrency";
 
 interface OrderCardProps {
   order: Order;
@@ -42,21 +43,13 @@ export function OrderCard({
       <ul className="space-y-1">
         {order.items.map((item) => (
           <li key={item.id}>
-            {item.quantity}x {item.product} —{" "}
-            {new Intl.NumberFormat("pt-BR", {
-              style: "currency",
-              currency: "BRL",
-            }).format(item.total)}
+            {item.quantity}x {item.product} — {formatCurrency(item.total)}
           </li>
         ))}
       </ul>
 
       <p className="mt-3">
-        <strong>Total:</strong>{" "}
-        {new Intl.NumberFormat("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        }).format(order.orderTotal)}
+        <strong>Total:</strong> {formatCurrency(order.orderTotal)}
       </p>
 
       <p>
