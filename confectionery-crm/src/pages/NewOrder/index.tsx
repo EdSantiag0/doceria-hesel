@@ -146,7 +146,11 @@ export function NewOrder() {
   }
   //------------------------------------------------------------------------------
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-[960px] flex-col gap-5">
+      <div>
+        <h2 className="m-0 text-2xl font-bold text-[#6f2706]">Novo Pedido</h2>
+        <p className="mb-0 mt-1 text-text-muted">Registre os itens e dados do pedido.</p>
+      </div>
       <ClientSelect
         clients={clients}
         value={formData.clientId}
@@ -158,26 +162,22 @@ export function NewOrder() {
         }
         error={formErrors.clientId}
       />
-      -------------------------------------------------------------------------
       <OrderItemsForm
         currentItem={currentItem}
         onChange={setCurrentItem}
         onAddItem={handleAddItem}
         error={formErrors.items}
       />
-      --------------------------------------------------------------
       <PaymentSelect
         value={formData.paymentMethod}
         onChange={handlePaymentMethodChange}
         error={formErrors.paymentMethod}
       />
-      --------------------------------------------------------------
       <OrderSummary
         items={formData.items}
         onRemoveItem={handleRemoveItem}
         orderTotal={orderTotal}
       />
-      --------------------------------------------------------------
       <ReminderForm
         reminderDate={formData.reminder?.reminderDate ?? ""}
         description={formData.reminder?.description ?? ""}
@@ -185,7 +185,9 @@ export function NewOrder() {
         onDescriptionChange={handleReminderDescriptionChange}
         error={formErrors.reminder}
       />
-      <button type="submit">Cadastrar pedido</button>
+      <div className="flex justify-end">
+        <button type="submit" className="min-h-12 rounded-xl bg-[#792d08] px-6 font-semibold text-white shadow-sm transition hover:bg-[#642305] active:scale-[0.98]">Cadastrar pedido</button>
+      </div>
     </form>
   );
 }

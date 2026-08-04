@@ -1,68 +1,7 @@
 import type { OrderItem } from "../../../types/OrderItem";
 import { Trash2 } from "lucide-react";
 import { formatCurrency } from "../../../utils/format/formatCurrency";
-
-interface OrderSummaryProps {
-  items: OrderItem[];
-  orderTotal: number;
-
-  onRemoveItem: (id: string) => void;
-
-  showDeleteOrder?: boolean;
-
-  onDeleteOrder?: () => void;
-}
-
-export function OrderSummary({
-  items,
-  onRemoveItem,
-  orderTotal,
-  showDeleteOrder,
-  onDeleteOrder,
-}: OrderSummaryProps) {
-  return (
-    <fieldset>
-      <legend>Resumo do Pedido</legend>
-      {items.length === 0 ? (
-        <small>Nenhum item adicionado ao pedido.</small>
-      ) : (
-        <ul className="space-y-2">
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className="flex items-center justify-between rounded border p-2"
-            >
-              <div>
-                <strong>{item.product}</strong>
-
-                <br />
-              </div>
-
-              <div className="flex items-center gap-4">
-                <strong>{formatCurrency(item.total)}</strong>
-
-                <button type="button" onClick={() => onRemoveItem(item.id)}>
-                  <Trash2 size={16} />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
-      <div className="flex items-center justify-between">
-        <span>Total do Pedido:</span>
-
-        <strong>{formatCurrency(orderTotal)}</strong>
-      </div>
-      {showDeleteOrder && (
-        <button
-          type="button"
-          onClick={onDeleteOrder}
-          className="mt-4 rounded-lg bg-red-600 px-4 py-2 text-white hover:bg-red-700"
-        >
-          Excluir Pedido
-        </button>
-      )}
-    </fieldset>
-  );
+interface OrderSummaryProps { items: OrderItem[]; orderTotal: number; onRemoveItem: (id: string) => void; showDeleteOrder?: boolean; onDeleteOrder?: () => void; }
+export function OrderSummary({ items, onRemoveItem, orderTotal, showDeleteOrder, onDeleteOrder }: OrderSummaryProps) {
+  return <fieldset className="rounded-2xl border border-[#f1dfbd] bg-white p-6 shadow-sm"><legend className="px-1 text-lg font-bold text-[#6f2706]">Resumo do Pedido</legend>{items.length === 0 ? <small className="mt-2 block text-text-muted">Nenhum item adicionado ao pedido.</small> : <ul className="mt-2 space-y-2">{items.map((item) => <li key={item.id} className="flex items-center justify-between rounded-xl border border-[#f1dfbd] bg-[#fffdf9] p-3"><strong>{item.product}</strong><div className="flex items-center gap-4"><strong>{formatCurrency(item.total)}</strong><button type="button" aria-label="Remover item" onClick={() => onRemoveItem(item.id)} className="rounded-lg p-2 text-danger transition hover:bg-red-50"><Trash2 size={16} /></button></div></li>)}</ul>}<div className="mt-4 flex items-center justify-between border-t border-[#f1dfbd] pt-4 text-lg text-[#642708]"><span>Total do Pedido:</span><strong>{formatCurrency(orderTotal)}</strong></div>{showDeleteOrder && <button type="button" onClick={onDeleteOrder} className="mt-4 rounded-xl bg-danger px-4 py-2 font-semibold text-white transition hover:bg-danger-dark">Excluir Pedido</button>}</fieldset>;
 }

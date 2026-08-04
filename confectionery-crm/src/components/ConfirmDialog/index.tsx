@@ -45,7 +45,7 @@ export function ConfirmDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+      <div className="w-full max-w-md rounded-2xl border border-[#f1dfbd] bg-white p-6 shadow-xl">
         <div className="mb-4 flex justify-center">{currentStyle.icon}</div>
 
         <h2
@@ -60,7 +60,7 @@ export function ConfirmDialog({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg border border-gray-300 px-4 py-2 font-medium text-gray-700 transition hover:bg-gray-100"
+            className="rounded-xl border border-[#e6bf74] px-4 py-2 font-medium text-[#642708] transition hover:bg-[#fff3dc]"
           >
             {cancelText}
           </button>

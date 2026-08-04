@@ -1,6 +1,6 @@
 // Layout principal com menu lateral e area de conteudo.
 import { NavLink, Outlet } from "react-router-dom";
-import { Bell, ClipboardList, UserPlus, Users } from "lucide-react";
+import { Bell, ClipboardList, ShoppingBag, UserPlus, Users } from "lucide-react";
 import { Header } from "../components/Header";
 
 const navigationItems = [
@@ -28,18 +28,18 @@ const navigationItems = [
 
 export function DefaultLayout() {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-[#f8f5f2] text-[var(--color-brand-900)] md:flex-row">
-      <aside className="flex w-full flex-col gap-[18px] border-b border-[#e7ddd5] bg-[var(--color-brand-50)] p-[18px] md:w-[264px] md:flex-[0_0_264px] md:gap-8 md:border-r md:border-b-0 md:px-[18px] md:py-6">
-        <div className="flex items-center gap-3 text-left text-[var(--color-brand-900)]">
-          <span className="inline-flex size-11 items-center justify-center rounded-lg bg-[var(--color-brand-500)] text-[16px] font-bold text-white">
-            H
+    <div className="flex min-h-screen w-full flex-col bg-brand-100 text-brand-900 md:flex-row">
+      <aside className="flex w-full flex-col gap-6 bg-[#752b08] p-4 text-white md:min-h-screen md:w-80 md:flex-[0_0_320px] md:gap-10 md:px-4 md:py-6">
+        <div className="flex items-center gap-3 px-2 text-left">
+          <span className="inline-flex size-11 items-center justify-center rounded-2xl bg-white/20 text-white">
+            <ShoppingBag size={22} strokeWidth={2.3} />
           </span>
           <div>
-            <strong className="block text-base leading-tight">
-              Doceria Hesel
+            <strong className="block text-[17px] leading-tight">
+              Doceria
             </strong>
-            <span className="mt-[3px] block text-[13px] text-[var(--color-text-muted)]">
-              Controle de pedidos
+            <span className="mt-0.5 block text-sm text-orange-100/80">
+              Sistema de Gestão
             </span>
           </div>
         </div>
@@ -58,21 +58,22 @@ export function DefaultLayout() {
                 end={item.path === "/"}
                 className={({ isActive }) =>
                   isActive
-                    ? "flex min-h-11 items-center justify-center gap-3 rounded-lg bg-[var(--color-brand-500)] px-3 text-white no-underline transition-colors duration-150 hover:bg-[#7b3f32] hover:text-white md:justify-start"
-                    : "flex min-h-11 items-center justify-center gap-3 rounded-lg px-3 text-[var(--color-text-muted)] no-underline transition-colors duration-150 hover:bg-[#f1e7df] hover:text-[var(--color-text)] md:justify-start"
+                    ? "flex min-h-14 items-center justify-center gap-3 rounded-2xl bg-white/25 px-5 text-white no-underline shadow-sm transition-colors duration-150 hover:bg-white/30 md:justify-start"
+                    : "flex min-h-14 items-center justify-center gap-3 rounded-2xl px-5 text-orange-100/85 no-underline transition-colors duration-150 hover:bg-white/10 hover:text-white md:justify-start"
                 }
               >
-                <Icon size={20} aria-hidden="true" />
-                <span className="text-[15px] font-semibold">{item.label}</span>
+                <Icon size={21} aria-hidden="true" />
+                <span className="text-[16px] font-semibold">{item.label}</span>
               </NavLink>
             );
           })}
         </nav>
+        <span className="mt-auto hidden border-t border-white/20 px-2 pt-5 text-sm text-orange-100/70 md:block">© 2026 Doceria</span>
       </aside>
 
-      <main className="flex min-w-0 flex-1 flex-col gap-6 p-6 text-left md:p-8">
+      <main className="flex min-w-0 flex-1 flex-col text-left">
         <Header />
-        <section className="flex min-h-0 flex-1">
+        <section className="flex min-h-0 flex-1 px-5 py-8 md:px-12 md:py-8">
           <Outlet />
         </section>
       </main>

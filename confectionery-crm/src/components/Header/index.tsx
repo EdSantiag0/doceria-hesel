@@ -1,19 +1,14 @@
 // Cabecalho com titulo do sistema e status atual.
 export function Header() {
   return (
-    <header className="flex flex-col items-start justify-between gap-5 border-b border-[#e7ddd5] pb-6 md:flex-row md:items-center">
+    <header className="flex min-h-[92px] flex-col items-start justify-center gap-1 border-b border-[#eadfd3] bg-white px-5 shadow-[0_2px_5px_rgb(91_61_52_/_0.05)] md:px-12">
       <div>
-        <p className="mb-1 mt-0 text-[13px] font-bold uppercase text-[--color-brand-500]">
-          Sistema de registros
-        </p>
-        <h1 className="m-0 text-[28px] leading-tight text-[--color-brand-900]">
-          Doceria Hesel
+        <h1 className="m-0 text-[22px] font-bold leading-tight text-[#6f2706]">
+          Registro de Clientes
         </h1>
-      </div>
-
-      <div className="inline-flex min-h-9 items-center gap-2 whitespace-nowrap rounded-lg border border-[#e7ddd5] bg-[#fffaf6] px-3 text-sm font-semibold text-[#5f514a]">
-        <span className="size-2 rounded-full bg-[#3f9b63]" aria-hidden="true" />
-        <span>Em desenvolvimento</span>
+        <p className="mb-0 mt-1 text-sm text-[#b14b18]">
+          Cadastre e gerencie seus clientes
+        </p>
       </div>
     </header>
   );

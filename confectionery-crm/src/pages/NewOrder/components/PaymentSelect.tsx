@@ -1,32 +1,5 @@
 import type { PaymentMethod } from "../../../types/Order";
-
-interface PaymentSelectProps {
-  value: PaymentMethod;
-  onChange: (paymentMethod: PaymentMethod) => void;
-  error?: string;
-}
-
+interface PaymentSelectProps { value: PaymentMethod; onChange: (paymentMethod: PaymentMethod) => void; error?: string; }
 export function PaymentSelect({ value, onChange, error }: PaymentSelectProps) {
-  return (
-    <fieldset>
-      <legend>Pagamento</legend>
-
-      <label htmlFor="paymentMethod">Forma de Pagamento: </label>
-
-      <select
-        id="paymentMethod"
-        value={value}
-        onChange={(e) => onChange(e.target.value as PaymentMethod)}
-      >
-        <option value="cash">Dinheiro</option>
-        <option value="credit_card">Cartão de Crédito</option>
-        <option value="debit_card">Cartão de Débito</option>
-        <option value="pix">PIX</option>
-        <option value="bank_transfer">Transferência Bancária</option>
-        <option value="other">Outro</option>
-      </select>
-
-      {error && <small className="text-red-600">{error}</small>}
-    </fieldset>
-  );
+  return <fieldset className="rounded-2xl border border-[#f1dfbd] bg-white p-6 shadow-sm"><legend className="px-1 text-lg font-bold text-[#6f2706]">Pagamento</legend><label className="mt-2 block text-base font-semibold text-[#642708]" htmlFor="paymentMethod">Forma de Pagamento</label><select className="mt-1.5 min-h-12 w-full rounded-xl border border-[#f0cf64] bg-[#fffaf0] px-4 text-[#43281c] outline-none focus:border-[#b85a18] focus:bg-white focus:shadow-[0_0_0_3px_rgba(184,90,24,0.12)]" id="paymentMethod" value={value} onChange={(e) => onChange(e.target.value as PaymentMethod)}><option value="cash">Dinheiro</option><option value="credit_card">Cartão de Crédito</option><option value="debit_card">Cartão de Débito</option><option value="pix">PIX</option><option value="bank_transfer">Transferência Bancária</option><option value="other">Outro</option></select>{error && <small className="mt-2 block text-[13px] text-danger-dark">{error}</small>}</fieldset>;
 }

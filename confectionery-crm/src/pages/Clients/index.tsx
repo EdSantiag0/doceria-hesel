@@ -18,6 +18,7 @@ import {
 import { EditOrderDialog } from "../../components/EditOrderDialog";
 import { deleteOrdersByClient } from "../../business/order/deleteClientOrders";
 import { ConfirmDialog } from "../../components/ConfirmDialog";
+import { Search } from "lucide-react";
 
 export function Clients() {
   const [search, setSearch] = useState("");
@@ -117,10 +118,10 @@ export function Clients() {
   }
 
   return (
-    <div className="flex w-full max-w-[840px] flex-col gap-[18px]">
+    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-[18px] sm:flex-row">
         <div>
-          <h2 className="mb-1.5 mt-0 text-2xl text-brand-900 font-bold">
+          <h2 className="mb-1.5 mt-0 text-2xl font-bold text-[#6f2706]">
             Clientes
           </h2>
           <p className="m-0 text-text-muted">
@@ -128,18 +129,21 @@ export function Clients() {
           </p>
         </div>
 
-        <span className="whitespace-nowrap rounded-lg border border-[--color-brand-border] bg-[--color-brand-50] px-2.5 py-1.5 text-sm font-bold text-[--color-brand-secondary]">
+        <span className="whitespace-nowrap rounded-xl border border-[#f0cf64] bg-[#fffaf0] px-3 py-2 text-sm font-semibold text-[#8a3c12]">
           {clients.length} cliente(s)
         </span>
       </div>
 
-      <input
-        className="min-h-11 w-full rounded-lg border border-[--color-brand-border] bg-white px-3 text-[--color-brand-text] outline-none focus:border-[--color-brand-primary] focus:shadow-[0_0_0_3px_rgba(141,73,58,0.14)]"
-        type="search"
-        placeholder="Pesquisar cliente pelo nome"
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-      />
+      <label className="relative block">
+        <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#b85a18]" size={19} />
+        <input
+          className="min-h-12 w-full rounded-xl border border-[#f0cf64] bg-[#fffaf0] py-2 pl-11 pr-4 text-[#43281c] outline-none placeholder:text-[#9a877d] focus:border-[#b85a18] focus:bg-white focus:shadow-[0_0_0_3px_rgba(184,90,24,0.12)]"
+          type="search"
+          placeholder="Buscar cliente..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
+      </label>
 
       <div className="grid gap-3">
         {filteredClients.length > 0 ? (
@@ -155,8 +159,8 @@ export function Clients() {
             />
           ))
         ) : (
-          <div className="rounded-lg border border-dashed border-[--color-brand-border] bg-[--color-brand-50] p-6 text-center">
-            <strong className="text-[--color-brand-text]">
+          <div className="rounded-2xl border border-dashed border-[#e6bf74] bg-[#fffaf0] p-8 text-center">
+            <strong className="text-brand-900">
               Nenhum cliente encontrado.
             </strong>
             <p className="mb-0 mt-1.5 text-text-muted">

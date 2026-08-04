@@ -22,12 +22,16 @@ export function Reminders() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="mx-auto flex w-full max-w-[960px] flex-col gap-5">
+      <div>
+        <h2 className="m-0 text-2xl font-bold text-[#6f2706]">Lembretes</h2>
+        <p className="mb-0 mt-1 text-text-muted">Acompanhe os pedidos que precisam de atenção.</p>
+      </div>
       {reminders.length === 0 ? (
         <p>Nenhum lembrete disponível.</p>
       ) : (
         reminders.map((reminder) => (
-          <div>
+          <div key={reminder.orderId}>
             <ConfirmDialog
               isOpen={isDialogOpen}
               title="Concluir lembrete"

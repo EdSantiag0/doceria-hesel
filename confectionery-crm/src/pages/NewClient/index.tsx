@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { z } from "zod";
 import { FormInput } from "../../components/FormInput";
+import { UserRoundPlus } from "lucide-react";
 import { createClient } from "../../services/clientStorage";
 import { toast } from "react-toastify";
 
@@ -65,18 +66,18 @@ export function NewClient() {
   }
 
   return (
-    <div className="w-full max-w-[720px]">
+    <div className="mx-auto w-full max-w-[960px]">
       <div className="mb-6">
-        <h2 className="mb-1.5 mt-0 text-2xl text-brand-900 font-bold">
+        <h2 className="mb-1.5 mt-0 text-2xl font-bold text-[#6f2706]">
           Novo Cliente
         </h2>
-        <p className="text-text-muted">
+        <p className="m-0 text-text-muted">
           Cadastre os dados principais para vincular pedidos depois.
         </p>
       </div>
 
       <form
-        className="grid gap-[18px] rounded-lg border border-[--color-brand-border] bg-[--color-brand-50] p-6"
+        className="grid gap-5 rounded-[22px] border border-[#f1dfbd] bg-white p-7 shadow-[var(--shadow-card)] md:grid-cols-2 md:p-8"
         onSubmit={handleSubmit}
       >
         <FormInput
@@ -121,13 +122,12 @@ export function NewClient() {
           }
         />
 
-        <div className="mt-1 flex justify-end">
+        <div className="mt-1 flex justify-end md:col-span-2">
           <button
             type="submit"
-            className="flex items-center justify-center min-h-12 px-6 rounded-lg 
-             bg-brand-500 text-white font-semibold shadow-sm 
-             transition-all hover:bg-brand-500/90 active:scale-[0.98]"
+            className="flex min-h-12 items-center justify-center gap-2 rounded-xl bg-[#792d08] px-6 font-semibold text-white shadow-sm transition-all hover:bg-[#642305] active:scale-[0.98]"
           >
+            <UserRoundPlus size={18} />
             Cadastrar Cliente
           </button>
         </div>

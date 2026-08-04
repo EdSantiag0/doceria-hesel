@@ -15,9 +15,9 @@ export function ReminderCard({
   onComplete,
 }: ReminderCardProps) {
   return (
-    <article className="rounded-lg border border-[#e7ddd5] bg-[#fffaf6] p-4">
+    <article className="rounded-2xl border border-[#f1dfbd] bg-white p-6 shadow-sm">
       <header className="mb-4">
-        <h3 className="text-lg font-bold text-[#2a211d]">{clientName}</h3>
+        <h3 className="m-0 text-lg font-bold text-[#51230c]">{clientName}</h3>
       </header>
 
       <div className="space-y-3">
@@ -49,7 +49,7 @@ export function ReminderCard({
         <button
           type="button"
           onClick={onComplete}
-          className="rounded bg-green-700 px-4 py-2 text-white transition hover:bg-green-800"
+          className="rounded-xl bg-[#792d08] px-5 py-2.5 font-semibold text-white transition hover:bg-[#642305]"
         >
           Concluir
         </button>

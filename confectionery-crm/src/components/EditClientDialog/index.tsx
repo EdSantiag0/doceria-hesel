@@ -28,7 +28,7 @@ export function EditClientDialog({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
+      <div className="w-full max-w-lg rounded-2xl border border-[#f1dfbd] bg-white p-6 shadow-xl">
         <h2 className="mb-6 text-xl font-bold text-brand-900">
           Editar Cliente
         </h2>
@@ -75,7 +75,7 @@ export function EditClientDialog({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg border px-4 py-2"
+            className="rounded-xl border border-[#e6bf74] px-4 py-2 text-[#642708] transition hover:bg-[#fff3dc]"
           >
             Cancelar
           </button>
@@ -83,7 +83,7 @@ export function EditClientDialog({
           <button
             type="button"
             onClick={() => onSave(form)}
-            className="rounded-lg bg-brand-600 px-4 py-2  bg-green-600 text-white  hover:bg-green-800"
+            className="rounded-xl bg-[#792d08] px-4 py-2 font-semibold text-white transition hover:bg-[#642305]"
           >
             Salvar
           </button>

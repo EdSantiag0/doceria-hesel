@@ -17,15 +17,15 @@ export function OrderCard({
   onDeleteOrder,
 }: OrderCardProps) {
   return (
-    <div className="rounded-lg border border-[#e7ddd5] bg-white p-4">
+    <div className="rounded-xl border border-[#f1dfbd] bg-white p-4">
       <div className="mb-3 flex items-center justify-between">
-        <strong>Pedido</strong>
+        <strong className="text-[#642708]">Pedido</strong>
 
         <div className="flex gap-2">
           <button
             type="button"
             onClick={() => onEditOrder(order)}
-            className="rounded bg-amber-500 p-2 text-white hover:bg-amber-600"
+            className="rounded-lg bg-amber-500 p-2 text-white transition hover:bg-amber-600"
           >
             <Pencil size={16} />
           </button>
@@ -33,7 +33,7 @@ export function OrderCard({
           <button
             type="button"
             onClick={() => onDeleteOrder(order.id)}
-            className="rounded bg-red-600 p-2 text-white hover:bg-red-700"
+            className="rounded-lg bg-danger p-2 text-white transition hover:bg-danger-dark"
           >
             <Trash2 size={16} />
           </button>

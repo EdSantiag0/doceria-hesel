@@ -10,6 +10,8 @@
   --color-brand-500: #8d493a;
   --color-brand-300: #c78f81;
   --color-brand-50: #fffaf6;
+  --color-brand-100: #fff7e8;
+  --color-brand-400: #a95b47;
 
   /* ==========================
    * Textos
@@ -25,6 +27,7 @@
 
   --color-brand-border: #eaddd3;
   --color-surface: #ffffff;
+  --shadow-card: 0 2px 4px rgb(91 61 52 / 0.08), 0 10px 24px rgb(91 61 52 / 0.06);
 
   /* ==========================
    * Estados
@@ -64,9 +67,17 @@
 
   body {
     margin: 0;
+    min-width: 320px;
   }
 
   * {
     box-sizing: border-box;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
   }
 }
