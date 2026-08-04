@@ -1,7 +1,14 @@
 // Layout principal com menu lateral e area de conteudo.
-import { NavLink, Outlet } from "react-router-dom";
-import { Bell, ClipboardList, ShoppingBag, UserPlus, Users } from "lucide-react";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
+import {
+  Bell,
+  ClipboardList,
+  ShoppingBag,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import { Header } from "../components/Header";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navigationItems = [
   {
@@ -27,6 +34,7 @@ const navigationItems = [
 ];
 
 export function DefaultLayout() {
+  const location = useLocation();
   return (
     <div className="flex min-h-screen w-full flex-col bg-brand-100 text-brand-900 md:flex-row">
       <aside className="flex w-full flex-col gap-6 bg-[#752b08] p-4 text-white md:min-h-screen md:w-80 md:flex-[0_0_320px] md:gap-10 md:px-4 md:py-6">
@@ -35,9 +43,7 @@ export function DefaultLayout() {
             <ShoppingBag size={22} strokeWidth={2.3} />
           </span>
           <div>
-            <strong className="block text-[17px] leading-tight">
-              Doceria
-            </strong>
+            <strong className="block text-[17px] leading-tight">Doceria</strong>
             <span className="mt-0.5 block text-sm text-orange-100/80">
               Sistema de Gestão
             </span>
@@ -68,13 +74,29 @@ export function DefaultLayout() {
             );
           })}
         </nav>
-        <span className="mt-auto hidden border-t border-white/20 px-2 pt-5 text-sm text-orange-100/70 md:block">© 2026 Doceria</span>
+        <span className="mt-auto hidden border-t border-white/20 px-2 pt-5 text-sm text-orange-100/70 md:block">
+          © 2026 Doceria
+        </span>
       </aside>
 
       <main className="flex min-w-0 flex-1 flex-col text-left">
         <Header />
-        <section className="flex min-h-0 flex-1 px-5 py-8 md:px-12 md:py-8">
-          <Outlet />
+        <section className="flex min-h-0 flex-1 overflow-hidden px-5 py-8 md:px-12 md:py-8">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{
+                duration: 0.25,
+                ease: "easeInOut",
+              }}
+              className="w-full"
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
         </section>
       </main>
     </div>
