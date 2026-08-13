@@ -7,6 +7,14 @@ import { UserRoundPlus } from "lucide-react";
 import { createClient } from "../../services/clientStorage";
 import { toast } from "react-toastify";
 
+function maskPhone(value: string): string {
+  return value
+    .replace(/\D/g, "")
+    .replace(/^(\d{2})(\d)/g, "($1) $2")
+    .replace(/(\d{5})(\d)/, "$1-$2")
+    .slice(0, 15);
+}
+
 const clientSchema = z.object({
   name: z
     .string()
@@ -21,11 +29,9 @@ const clientSchema = z.object({
   phone: z
     .string()
     .trim()
-    .min(10, "Informe um telefone valido.")
-    .max(15, "O telefone deve ter no maximo 15 caracteres.")
     .regex(
-      /^\(?\d{2}\)?[\s-]?[\s9]?\d{4}-?\d{4}$/,
-      "Informe um telefone valido.",
+      /^\(\d{2}\)\s\d{4,5}-\d{4}$/,
+      "Informe um telefone valido no formato (00) 00000-0000.",
     ),
 });
 
@@ -117,7 +123,7 @@ export function NewClient() {
           onChange={(event) =>
             setFormData((currentFormData) => ({
               ...currentFormData,
-              phone: event.target.value,
+              phone: maskPhone(event.target.value),
             }))
           }
         />

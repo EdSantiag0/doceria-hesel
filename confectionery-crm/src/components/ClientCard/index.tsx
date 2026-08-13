@@ -27,7 +27,7 @@ export function ClientCard({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-[#f1dfbd] bg-white shadow-sm">
-      <article className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <article className="flex flex-col gap-4 border-l-3 border-brand-500 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">
           <h3 className="mb-1 mt-0 text-[17px] font-semibold text-[#51230c]">
             {client.name}
@@ -37,7 +37,7 @@ export function ClientCard({
 
         <a
           href={`tel:${client.phone}`}
-          className="whitespace-nowrap text-sm font-semibold text-[#a84614] no-underline hover:underline"
+          className="whitespace-nowrap text-sm font-semibold text-brand-700 no-underline hover:underline"
         >
           {client.phone}
         </a>
