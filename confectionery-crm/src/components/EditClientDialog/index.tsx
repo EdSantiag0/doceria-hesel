@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Client } from "../../types/Client";
 import { FormInput } from "../FormInput";
+import { maskPhone } from "../../utils/format/formatMasks";
 
 interface EditClientDialogProps {
   isOpen: boolean;
@@ -62,6 +63,7 @@ export function EditClientDialog({
             label="Telefone"
             name="phone"
             value={form.phone}
+            mask={maskPhone}
             onChange={(e) =>
               setForm({
                 ...form,

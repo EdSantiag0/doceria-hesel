@@ -6,14 +6,7 @@ import { FormInput } from "../../components/FormInput";
 import { UserRoundPlus } from "lucide-react";
 import { createClient } from "../../services/clientStorage";
 import { toast } from "react-toastify";
-
-function maskPhone(value: string): string {
-  return value
-    .replace(/\D/g, "")
-    .replace(/^(\d{2})(\d)/g, "($1) $2")
-    .replace(/(\d{5})(\d)/, "$1-$2")
-    .slice(0, 15);
-}
+import { maskPhone } from "../../utils/format/formatMasks";
 
 const clientSchema = z.object({
   name: z
@@ -120,6 +113,7 @@ export function NewClient() {
           placeholder="(00) 00000-0000"
           value={formData.phone}
           error={errors.phone}
+          mask={maskPhone}
           onChange={(event) =>
             setFormData((currentFormData) => ({
               ...currentFormData,
